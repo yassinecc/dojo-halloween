@@ -4,7 +4,7 @@ import React from 'react';
 import { StyleSheet, Image, View, PanResponder, Dimensions, Modal, Alert } from 'react-native';
 import styled from 'styled-components';
 import { backgroundImage, slenderMan } from 'dojo-halloween/assets/';
-import { LifeStatus, Items } from 'dojo-halloween/src/components';
+import { LifeStatus, Items, Sound } from 'dojo-halloween/src/components';
 
 const mapFactor = 1 / 25;
 
@@ -40,13 +40,18 @@ export default class App extends React.Component<*, StateType> {
     };
   }
 
+  componentDidMount() {
+    Sound.init();
+  }
+
   componentDidUpdate(_: any, prevState: StateType) {
     if (!prevState.showSlenderManModal && this.state.showSlenderManModal) {
-      setTimeout(() => this.setState({ showSlenderManModal: false }), 2000);
+      setTimeout(() => this.setState({ showSlenderManModal: false }), 1500);
     }
   }
 
   toggleSlenderManModal = (showModal: boolean) => {
+    Sound.playScream();
     this.setState({ showSlenderManModal: showModal });
   };
 
@@ -109,13 +114,6 @@ export default class App extends React.Component<*, StateType> {
           style={imageStyle}
           {...this.panResponder.panHandlers}
         />
-        <MinimapContainerView pointerEvents={'box-none'}>
-          <MinimapView
-            pointerEvents={'box-none'}
-            left={this.getMinimapMargin('x')}
-            top={this.getMinimapMargin('y')}
-          />
-        </MinimapContainerView>
         <View style={itemContainerStyle} pointerEvents={'box-none'}>
           <Items
             goodPress={() => Alert.alert('Coucou')}
@@ -123,6 +121,13 @@ export default class App extends React.Component<*, StateType> {
             background={background}
           />
         </View>
+        <MinimapContainerView pointerEvents={'box-none'}>
+          <MinimapView
+            pointerEvents={'box-none'}
+            left={this.getMinimapMargin('x')}
+            top={this.getMinimapMargin('y')}
+          />
+        </MinimapContainerView>
         <LifeStatus />
         <Modal transparent animationType={'fade'} visible={this.state.showSlenderManModal}>
           <View style={styles.fullScreenStyle}>
