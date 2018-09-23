@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Image, View, PanResponder, Dimensions } from 'react-native';
+import { StyleSheet, Image, View, PanResponder, Dimensions, TouchableOpacity } from 'react-native';
 import styled from 'styled-components';
 import backgroundImage from './src/images/background.jpg';
 
@@ -76,7 +76,15 @@ export default class App extends React.Component {
     const imageStyle = {
       left: initial.x + delta.x,
       top: initial.y + delta.y,
-      resizeMode: 'contain',
+    };
+    const itemContainerStyle = {
+      position: 'absolute',
+      left: this.state.start.x + initial.x + delta.x,
+      top: this.state.start.y + initial.y + delta.y,
+      height: background.y,
+      width: background.x,
+      justifyContent: 'center',
+      alignItems: 'center',
     };
     return (
       <View style={styles.container}>
@@ -93,6 +101,9 @@ export default class App extends React.Component {
             top={this.getMinimapMargin('y')}
           />
         </MinimapContainerView>
+        <View style={itemContainerStyle} pointerEvents={'box-none'}>
+          <TouchableOpacity style={{ backgroundColor: 'blue', height: 50, width: 50 }} />
+        </View>
       </View>
     );
   }
