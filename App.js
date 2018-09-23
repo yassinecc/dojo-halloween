@@ -1,16 +1,12 @@
 // @flow
 
 import React from 'react';
-import { StyleSheet, Image, View, PanResponder, Dimensions, TouchableOpacity } from 'react-native';
+import { StyleSheet, Image, View, PanResponder, Dimensions } from 'react-native';
 import styled from 'styled-components';
 import { backgroundImage } from 'dojo-halloween/assets/';
-import { LifeStatus } from 'dojo-halloween/src/components';
+import { LifeStatus, Items } from 'dojo-halloween/src/components';
 
 const mapFactor = 1 / 25;
-
-const itemsCount = 50;
-
-const markerSize = 30;
 
 const mapBorderWidth = 2;
 
@@ -21,7 +17,6 @@ const { width: backgroundWidth, height: backgroundHeight } = Image.resolveAssetS
 const background = { x: backgroundWidth, y: backgroundHeight };
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('screen');
-Dimensions.get;
 
 const screen = { x: screenWidth, y: screenHeight };
 
@@ -41,10 +36,6 @@ export default class App extends React.Component<*, StateType> {
         x: null,
         y: null,
       },
-      itemsCoordinates: {
-        x: this.generateCoordinates(itemsCount, background.x),
-        y: this.generateCoordinates(itemsCount, background.y),
-      },
     };
   }
 
@@ -63,38 +54,6 @@ export default class App extends React.Component<*, StateType> {
             this.state.start[dimension] -
             this.state.initial[dimension]
         );
-  };
-
-  generateCoordinates = (size: number, maxDimension: number) => {
-    if (maxDimension < size) {
-      console.warn('Cannot generate random coordinates', { size, maxDimension });
-      return [];
-    }
-    let array = [];
-    while (array.length < size) {
-      const random = Math.floor(Math.random() * maxDimension);
-      if (array.includes(random)) continue;
-      array.push(random);
-    }
-    return array;
-  };
-
-  renderItems = (): Array<TouchableOpacity> => {
-    return Array(itemsCount)
-      .fill(0)
-      .map((_, i) => (
-        <TouchableOpacity
-          key={i}
-          style={{
-            position: 'absolute',
-            top: this.state.itemsCoordinates.y[i],
-            left: this.state.itemsCoordinates.x[i],
-            backgroundColor: 'blue',
-            height: markerSize,
-            width: markerSize,
-          }}
-        />
-      ));
   };
 
   getMinimapMargin = (dimension: string) =>
@@ -139,10 +98,6 @@ export default class App extends React.Component<*, StateType> {
           style={imageStyle}
           {...this.panResponder.panHandlers}
         />
-        <View style={itemContainerStyle} pointerEvents={'box-none'}>
-          {this.renderItems()}
-        </View>
-        <LifeStatus />
         <MinimapContainerView pointerEvents={'box-none'}>
           <MinimapView
             pointerEvents={'box-none'}
@@ -150,6 +105,10 @@ export default class App extends React.Component<*, StateType> {
             top={this.getMinimapMargin('y')}
           />
         </MinimapContainerView>
+        <View style={itemContainerStyle} pointerEvents={'box-none'}>
+          <Items background={background} />
+        </View>
+        <LifeStatus />
       </View>
     );
   }
@@ -167,10 +126,6 @@ type StateType = {
   start: {
     x: ?number,
     y: ?number,
-  },
-  itemsCoordinates: {
-    x: Array<number>,
-    y: Array<number>,
   },
 };
 
