@@ -1,11 +1,12 @@
 import React from 'react';
 import { StyleSheet, Image, View, PanResponder, Dimensions, TouchableOpacity } from 'react-native';
 import styled from 'styled-components';
-import backgroundImage from './src/images/background.jpg';
+import backgroundImage from 'dojo-halloween/assets/background.jpg';
+import { LifeStatus } from 'dojo-halloween/src/components';
 
 const mapFactor = 1 / 25;
 
-const itemsCount = 100;
+const itemsCount = 50;
 
 const markerSize = 30;
 
@@ -18,6 +19,7 @@ const { width: backgroundWidth, height: backgroundHeight } = Image.resolveAssetS
 const background = { x: backgroundWidth, y: backgroundHeight };
 
 const { width: screenWidth, height: screenHeight } = Dimensions.get('screen');
+Dimensions.get;
 
 const screen = { x: screenWidth, y: screenHeight };
 
@@ -137,6 +139,7 @@ export default class App extends React.Component {
         <View style={itemContainerStyle} pointerEvents={'box-none'}>
           {this.renderItems()}
         </View>
+        <LifeStatus />
         <MinimapContainerView pointerEvents={'box-none'}>
           <MinimapView
             pointerEvents={'box-none'}
