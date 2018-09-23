@@ -35,20 +35,32 @@ export default class App extends React.Component {
 
   onImageLayout = event => {
     const { x, y } = event.nativeEvent.layout;
-
     if (!this.state.start.x || !this.state.start.y) this.setState({ start: { x, y } });
+  };
+
+  getFinalDisplacement = (diff, dimension) => {
+    return diff > 0
+      ? Math.min(diff, -this.state.start[dimension] - this.state.initial[dimension])
+      : Math.max(
+          diff,
+          screen[dimension] -
+            background[dimension] -
+            this.state.start[dimension] -
+            this.state.initial[dimension]
+        );
   };
 
   panResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
     onPanResponderMove: (_, gestureState) => {
-      this.setState({ delta: { x: gestureState.dx, y: gestureState.dy } });
+      const finalDx = this.getFinalDisplacement(gestureState.dx, 'x');
+      const finalDy = this.getFinalDisplacement(gestureState.dy, 'y');
+      this.setState({ delta: { x: finalDx, y: finalDy } });
     },
     onPanResponderRelease: () => {
       const { initial, delta } = this.state;
       this.setState({
         initial: { x: initial.x + delta.x, y: initial.y + delta.y },
-
         delta: { x: 0, y: 0 },
       });
     },
