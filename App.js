@@ -50,6 +50,11 @@ export default class App extends React.Component {
         );
   };
 
+  getMinimapMargin = dimension =>
+    (-this.state.start[dimension] - this.state.initial[dimension] - this.state.delta[dimension]) *
+      mapFactor -
+    mapBorderWidth;
+
   panResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
     onPanResponderMove: (_, gestureState) => {
@@ -82,16 +87,7 @@ export default class App extends React.Component {
           {...this.panResponder.panHandlers}
         />
         <MinimapContainerView>
-          <MinimapView
-            left={
-              (-this.state.start.x - this.state.initial.x - this.state.delta.x) * mapFactor -
-              mapBorderWidth
-            }
-            top={
-              (-this.state.start.y - this.state.initial.y - this.state.delta.y) * mapFactor -
-              mapBorderWidth
-            }
-          />
+          <MinimapView left={this.getMinimapMargin('x')} top={this.getMinimapMargin('y')} />
         </MinimapContainerView>
       </View>
     );
