@@ -1,9 +1,9 @@
 // @flow
 
 import React from 'react';
-import { StyleSheet, Image, View, PanResponder, Dimensions } from 'react-native';
+import { StyleSheet, Image, View, PanResponder, Dimensions, Modal, Alert } from 'react-native';
 import styled from 'styled-components';
-import { backgroundImage } from 'dojo-halloween/assets/';
+import { backgroundImage, slenderMan } from 'dojo-halloween/assets/';
 import { LifeStatus, Items } from 'dojo-halloween/src/components';
 
 const mapFactor = 1 / 25;
@@ -24,6 +24,7 @@ export default class App extends React.Component<*, StateType> {
   constructor() {
     super();
     this.state = {
+      showSlenderManModal: false,
       initial: {
         x: 0,
         y: 0,
@@ -38,6 +39,16 @@ export default class App extends React.Component<*, StateType> {
       },
     };
   }
+
+  componentDidUpdate(_: any, prevState: StateType) {
+    if (!prevState.showSlenderManModal && this.state.showSlenderManModal) {
+      setTimeout(() => this.setState({ showSlenderManModal: false }), 2000);
+    }
+  }
+
+  toggleSlenderManModal = (showModal: boolean) => {
+    this.setState({ showSlenderManModal: showModal });
+  };
 
   onImageLayout = (event: ViewLayoutEvent) => {
     const { x, y } = event.nativeEvent.layout;
@@ -106,15 +117,25 @@ export default class App extends React.Component<*, StateType> {
           />
         </MinimapContainerView>
         <View style={itemContainerStyle} pointerEvents={'box-none'}>
-          <Items background={background} />
+          <Items
+            goodPress={() => Alert.alert('Coucou')}
+            badPress={() => this.toggleSlenderManModal(true)}
+            background={background}
+          />
         </View>
         <LifeStatus />
+        <Modal transparent animationType={'fade'} visible={this.state.showSlenderManModal}>
+          <View style={styles.fullScreenStyle}>
+            <Image source={slenderMan} resizeMode={'contain'} />
+          </View>
+        </Modal>
       </View>
     );
   }
 }
 
 type StateType = {
+  showSlenderManModal: boolean,
   initial: {
     x: number,
     y: number,
@@ -165,5 +186,16 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  fullScreenStyle: {
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    position: 'absolute',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(93,93,93,0.5)',
   },
 });
