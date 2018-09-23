@@ -1,4 +1,5 @@
 [ignore]
+.*/node_modules/.*
 
 [include]
 
@@ -7,5 +8,9 @@
 [lints]
 
 [options]
+module.system=haste
+
+[version]
+^0.81.0
 
 [strict]

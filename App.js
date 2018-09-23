@@ -1,7 +1,9 @@
+// @flow
+
 import React from 'react';
 import { StyleSheet, Image, View, PanResponder, Dimensions, TouchableOpacity } from 'react-native';
 import styled from 'styled-components';
-import backgroundImage from 'dojo-halloween/assets/background.jpg';
+import { backgroundImage } from 'dojo-halloween/assets/';
 import { LifeStatus } from 'dojo-halloween/src/components';
 
 const mapFactor = 1 / 25;
@@ -23,7 +25,7 @@ Dimensions.get;
 
 const screen = { x: screenWidth, y: screenHeight };
 
-export default class App extends React.Component {
+export default class App extends React.Component<*, StateType> {
   constructor() {
     super();
     this.state = {
@@ -46,12 +48,12 @@ export default class App extends React.Component {
     };
   }
 
-  onImageLayout = event => {
+  onImageLayout = (event: ViewLayoutEvent) => {
     const { x, y } = event.nativeEvent.layout;
     if (!this.state.start.x || !this.state.start.y) this.setState({ start: { x, y } });
   };
 
-  getFinalDisplacement = (diff, dimension) => {
+  getFinalDisplacement = (diff: number, dimension: string) => {
     return diff > 0
       ? Math.min(diff, -this.state.start[dimension] - this.state.initial[dimension])
       : Math.max(
@@ -63,7 +65,7 @@ export default class App extends React.Component {
         );
   };
 
-  generateCoordinates = (size: Integer, maxDimension: Integer) => {
+  generateCoordinates = (size: number, maxDimension: number) => {
     if (maxDimension < size) {
       console.warn('Cannot generate random coordinates', { size, maxDimension });
       return [];
@@ -77,8 +79,8 @@ export default class App extends React.Component {
     return array;
   };
 
-  renderItems = () =>
-    Array(itemsCount)
+  renderItems = (): Array<TouchableOpacity> => {
+    return Array(itemsCount)
       .fill(0)
       .map((_, i) => (
         <TouchableOpacity
@@ -93,8 +95,9 @@ export default class App extends React.Component {
           }}
         />
       ));
+  };
 
-  getMinimapMargin = dimension =>
+  getMinimapMargin = (dimension: string) =>
     (-this.state.start[dimension] - this.state.initial[dimension] - this.state.delta[dimension]) *
       mapFactor -
     mapBorderWidth;
@@ -151,6 +154,36 @@ export default class App extends React.Component {
     );
   }
 }
+
+type StateType = {
+  initial: {
+    x: number,
+    y: number,
+  },
+  delta: {
+    x: number,
+    y: number,
+  },
+  start: {
+    x: ?number,
+    y: ?number,
+  },
+  itemsCoordinates: {
+    x: Array<number>,
+    y: Array<number>,
+  },
+};
+
+type ViewLayoutEvent = {
+  nativeEvent: {
+    layout: {
+      x: number,
+      y: number,
+      width: number,
+      height: number,
+    },
+  },
+};
 
 const MinimapContainerView = styled.View`
   height: ${background.y * mapFactor};
