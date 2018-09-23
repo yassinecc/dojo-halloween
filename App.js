@@ -86,8 +86,12 @@ export default class App extends React.Component {
           style={imageStyle}
           {...this.panResponder.panHandlers}
         />
-        <MinimapContainerView>
-          <MinimapView left={this.getMinimapMargin('x')} top={this.getMinimapMargin('y')} />
+        <MinimapContainerView pointerEvents={'box-none'}>
+          <MinimapView
+            pointerEvents={'box-none'}
+            left={this.getMinimapMargin('x')}
+            top={this.getMinimapMargin('y')}
+          />
         </MinimapContainerView>
       </View>
     );
