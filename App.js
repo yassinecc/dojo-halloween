@@ -11,7 +11,11 @@ const { width: backgroundWidth, height: backgroundHeight } = Image.resolveAssetS
   backgroundImage
 );
 
+const background = { x: backgroundWidth, y: backgroundHeight };
+
 const { width: screenWidth, height: screenHeight } = Dimensions.get('screen');
+
+const screen = { x: screenWidth, y: screenHeight };
 
 export default class App extends React.Component {
   state = {
@@ -83,8 +87,8 @@ export default class App extends React.Component {
 }
 
 const MinimapContainerView = styled.View`
-  height: ${backgroundHeight * mapFactor};
-  width: ${backgroundWidth * mapFactor};
+  height: ${background.y * mapFactor};
+  width: ${background.x * mapFactor};
   position: absolute;
   right: 0;
   bottom: 0;
@@ -94,8 +98,8 @@ const MinimapContainerView = styled.View`
 `;
 
 const MinimapView = styled.View`
-  height: ${screenHeight * mapFactor};
-  width: ${screenWidth * mapFactor};
+  height: ${screen.y * mapFactor};
+  width: ${screen.x * mapFactor};
   position: absolute;
   border-color: red;
   border-width: ${mapBorderWidth};
