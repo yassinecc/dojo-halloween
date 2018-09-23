@@ -1,6 +1,17 @@
 import React from 'react';
-import { StyleSheet, Image, View, PanResponder } from 'react-native';
+import { StyleSheet, Image, View, PanResponder, Dimensions } from 'react-native';
+import styled from 'styled-components';
 import backgroundImage from './src/images/background.jpg';
+
+const mapFactor = 1 / 25;
+
+const mapBorderWidth = 2;
+
+const { width: backgroundWidth, height: backgroundHeight } = Image.resolveAssetSource(
+  backgroundImage
+);
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get('screen');
 
 export default class App extends React.Component {
   state = {
@@ -12,7 +23,18 @@ export default class App extends React.Component {
       x: 0,
       y: 0,
     },
+    start: {
+      x: null,
+      y: null,
+    },
   };
+
+  onImageLayout = event => {
+    const { x, y } = event.nativeEvent.layout;
+
+    if (!this.state.start.x || !this.state.start.y) this.setState({ start: { x, y } });
+  };
+
   panResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
     onPanResponderMove: (_, gestureState) => {
@@ -37,11 +59,47 @@ export default class App extends React.Component {
     };
     return (
       <View style={styles.container}>
-        <Image source={backgroundImage} style={imageStyle} {...this.panResponder.panHandlers} />
+        <Image
+          onLayout={this.onImageLayout}
+          source={backgroundImage}
+          style={imageStyle}
+          {...this.panResponder.panHandlers}
+        />
+        <MinimapContainerView>
+          <MinimapView
+            left={
+              (-this.state.start.x - this.state.initial.x - this.state.delta.x) * mapFactor -
+              mapBorderWidth
+            }
+            top={
+              (-this.state.start.y - this.state.initial.y - this.state.delta.y) * mapFactor -
+              mapBorderWidth
+            }
+          />
+        </MinimapContainerView>
       </View>
     );
   }
 }
+
+const MinimapContainerView = styled.View`
+  height: ${backgroundHeight * mapFactor};
+  width: ${backgroundWidth * mapFactor};
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  border-color: red;
+  border-width: ${mapBorderWidth};
+  background-color: rgba(255, 0, 0, 0.3);
+`;
+
+const MinimapView = styled.View`
+  height: ${screenHeight * mapFactor};
+  width: ${screenWidth * mapFactor};
+  position: absolute;
+  border-color: red;
+  border-width: ${mapBorderWidth};
+`;
 
 const styles = StyleSheet.create({
   container: {
