@@ -4,6 +4,7 @@
 [include]
 
 [libs]
+flow
 
 [lints]
 

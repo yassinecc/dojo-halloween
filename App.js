@@ -197,17 +197,6 @@ type StateType = {
   },
 };
 
-type ViewLayoutEvent = {
-  nativeEvent: {
-    layout: {
-      x: number,
-      y: number,
-      width: number,
-      height: number,
-    },
-  },
-};
-
 const MinimapContainerView = styled.View`
   height: ${background.y * mapFactor};
   width: ${background.x * mapFactor};
