@@ -3,7 +3,7 @@
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 
-const itemsCount = 50;
+const itemsCount = 100;
 
 const markerSize = 30;
 
@@ -15,8 +15,8 @@ export default class Items extends React.Component<PropsType, StateType> {
     this.state = {
       itemsProperties: {
         type: this.generateItemType(itemsCount),
-        x: this.generateCoordinates(itemsCount, props.background.x),
-        y: this.generateCoordinates(itemsCount, props.background.y),
+        x: this.generateRandomCoordinates(itemsCount, props.background.x, 200),
+        y: this.generateRandomCoordinates(itemsCount, props.background.y, 200),
       },
     };
   }
@@ -27,16 +27,16 @@ export default class Items extends React.Component<PropsType, StateType> {
       .map(n => (Math.random() > threshold ? 'good' : 'bad'));
   };
 
-  generateCoordinates = (size: number, maxDimension: number) => {
+  generateRandomCoordinates = (size: number, maxDimension: number, scaleFactor: number) => {
     if (maxDimension < size) {
       console.warn('Cannot generate random coordinates', { size, maxDimension });
       return [];
     }
     let array = [];
     while (array.length < size) {
-      const random = Math.floor(Math.random() * maxDimension);
+      const random = Math.floor(Math.random() * (maxDimension / scaleFactor));
       if (array.includes(random)) continue;
-      array.push(random);
+      array.push(random * scaleFactor);
     }
     return array;
   };
