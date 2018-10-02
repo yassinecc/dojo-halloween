@@ -165,7 +165,12 @@ export default class App extends React.Component<*, StateType> {
           />
         </MinimapContainerView>
         <LifeStatus />
-        <Modal transparent animationType={'fade'} visible={this.state.showSlenderManModal}>
+        <Modal
+          transparent
+          animationType={'fade'}
+          visible={this.state.showSlenderManModal}
+          onRequestClose={() => {}}
+        >
           <View style={styles.fullScreenStyle}>
             <Image source={slenderMan} resizeMode={'contain'} />
           </View>
