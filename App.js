@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { StyleSheet, Image, View, PanResponder, Dimensions, Modal, Alert } from 'react-native';
+import { Gyroscope } from 'expo';
 import styled from 'styled-components';
 import {
   backgroundImage,
@@ -36,6 +37,7 @@ const characterDirections = {
 
 export default class App extends React.Component<*, StateType> {
   state: StateType = {
+    gyroscopeData: { x: 0, y: 0, z: 0 },
     characterDirection: 'down',
     showSlenderManModal: false,
     initial: {
@@ -52,8 +54,17 @@ export default class App extends React.Component<*, StateType> {
     },
   };
 
+  subscription: EmitterSubscription<*>;
+
   componentDidMount() {
     Sound.init();
+    this.subscription = Gyroscope.addListener(result => {
+      this.setState({ gyroscopeData: result });
+    });
+  }
+
+  componentWillUnmount() {
+    this.subscription && this.subscription.remove();
   }
 
   componentDidUpdate(_: any, prevState: StateType) {
@@ -114,6 +125,7 @@ export default class App extends React.Component<*, StateType> {
   });
 
   render() {
+    this.state.gyroscopeData.y > 2 && Alert.alert('Box unlocked');
     const { initial, delta } = this.state;
     const imageStyle = {
       left: initial.x + delta.x,
@@ -164,6 +176,11 @@ export default class App extends React.Component<*, StateType> {
 }
 
 type StateType = {
+  gyroscopeData: {
+    x: number,
+    y: number,
+    z: number,
+  },
   characterDirection: 'up' | 'down' | 'left' | 'right',
   showSlenderManModal: boolean,
   initial: {
