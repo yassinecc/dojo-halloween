@@ -5,10 +5,11 @@ import { View, TouchableOpacity } from 'react-native';
 
 const itemsCount = 100;
 
-const markerSize = 30;
-
 const threshold = 0.7;
 
+const zoneRadius = 100;
+
+const markerSize = 20;
 export default class Items extends React.Component<PropsType, StateType> {
   constructor(props: PropsType) {
     super(props);
@@ -45,22 +46,33 @@ export default class Items extends React.Component<PropsType, StateType> {
     return Array(itemsCount)
       .fill(0)
       .map((_, i) => (
-        <TouchableOpacity
+        <View
           key={i}
-          onPress={
-            this.state.itemsProperties.type[i] === 'good'
-              ? this.props.goodPress
-              : this.props.badPress
-          }
+          pointerEvents={'box-none'}
           style={{
-            position: 'absolute',
             top: this.state.itemsProperties.y[i],
             left: this.state.itemsProperties.x[i],
-            backgroundColor: 'blue',
-            height: markerSize,
-            width: markerSize,
+            height: markerSize + 2 * zoneRadius,
+            width: markerSize + 2 * zoneRadius,
+            backgroundColor: 'rgba(255,130, 130, 0.3)',
           }}
-        />
+        >
+          <TouchableOpacity
+            onPress={
+              this.state.itemsProperties.type[i] === 'good'
+                ? this.props.goodPress
+                : this.props.badPress
+            }
+            style={{
+              position: 'absolute',
+              top: zoneRadius,
+              left: zoneRadius,
+              backgroundColor: 'blue',
+              height: markerSize,
+              width: markerSize,
+            }}
+          />
+        </View>
       ));
   };
 
