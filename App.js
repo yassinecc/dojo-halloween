@@ -3,7 +3,14 @@
 import React from 'react';
 import { StyleSheet, Image, View, PanResponder, Dimensions, Modal, Alert } from 'react-native';
 import styled from 'styled-components';
-import { backgroundImage, slenderMan } from 'dojo-halloween/assets/';
+import {
+  backgroundImage,
+  slenderMan,
+  characterUp,
+  characterDown,
+  characterLeft,
+  characterRight,
+} from 'dojo-halloween/assets/';
 import { LifeStatus, Items, Sound } from 'dojo-halloween/src/components';
 
 const mapFactor = 1 / 25;
@@ -20,25 +27,30 @@ const { width: screenWidth, height: screenHeight } = Dimensions.get('screen');
 
 const screen = { x: screenWidth, y: screenHeight };
 
+const characterDirections = {
+  up: characterUp,
+  down: characterDown,
+  left: characterLeft,
+  right: characterRight,
+};
+
 export default class App extends React.Component<*, StateType> {
-  constructor() {
-    super();
-    this.state = {
-      showSlenderManModal: false,
-      initial: {
-        x: 0,
-        y: 0,
-      },
-      delta: {
-        x: 0,
-        y: 0,
-      },
-      start: {
-        x: null,
-        y: null,
-      },
-    };
-  }
+  state: StateType = {
+    characterDirection: 'down',
+    showSlenderManModal: false,
+    initial: {
+      x: 0,
+      y: 0,
+    },
+    delta: {
+      x: 0,
+      y: 0,
+    },
+    start: {
+      x: null,
+      y: null,
+    },
+  };
 
   componentDidMount() {
     Sound.init();
@@ -82,7 +94,15 @@ export default class App extends React.Component<*, StateType> {
     onPanResponderMove: (_, gestureState) => {
       const finalDx = this.getFinalDisplacement(gestureState.dx, 'x');
       const finalDy = this.getFinalDisplacement(gestureState.dy, 'y');
-      this.setState({ delta: { x: finalDx, y: finalDy } });
+      let characterDirection = this.state.characterDirection;
+      if (Math.abs(finalDx) > Math.abs(finalDy)) {
+        characterDirection = finalDx < 0 ? 'right' : 'left';
+      }
+
+      if (Math.abs(finalDx) < Math.abs(finalDy)) {
+        characterDirection = finalDy < 0 ? 'down' : 'up';
+      }
+      this.setState({ delta: { x: finalDx, y: finalDy }, characterDirection });
     },
     onPanResponderRelease: () => {
       const { initial, delta } = this.state;
@@ -121,6 +141,10 @@ export default class App extends React.Component<*, StateType> {
             background={background}
           />
         </View>
+        <Image
+          style={{ position: 'absolute' }}
+          source={characterDirections[this.state.characterDirection]}
+        />
         <MinimapContainerView pointerEvents={'box-none'}>
           <MinimapView
             pointerEvents={'box-none'}
@@ -140,6 +164,7 @@ export default class App extends React.Component<*, StateType> {
 }
 
 type StateType = {
+  characterDirection: 'up' | 'down' | 'left' | 'right',
   showSlenderManModal: boolean,
   initial: {
     x: number,
