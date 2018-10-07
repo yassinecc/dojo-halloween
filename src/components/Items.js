@@ -6,14 +6,8 @@ import { generateRandomCoordinates } from 'dojo-halloween/src/helpers/itemsHelpe
 
 import { itemsCount, zoneRadius, markerSize } from 'dojo-halloween/src/helpers/constants';
 export default class Items extends React.Component<PropsType, *> {
-  itemsList = generateRandomCoordinates(
-    itemsCount,
-    this.props.background.x,
-    this.props.background.y
-  );
-
   renderItems = (): Array<TouchableOpacity> => {
-    return this.itemsList.map((item, i) => (
+    return this.props.itemsList.map((item, i) => (
       <View
         key={i}
         pointerEvents={'box-none'}
@@ -48,8 +42,5 @@ export default class Items extends React.Component<PropsType, *> {
 type PropsType = {
   goodPress: () => void,
   badPress: () => void,
-  background: {
-    x: number,
-    y: number,
-  },
+  itemsList: Array<Point<number>>,
 };

@@ -13,10 +13,8 @@ import {
   characterRight,
 } from 'dojo-halloween/assets/';
 import { LifeStatus, Items, Sound } from 'dojo-halloween/src/components';
-
-const mapFactor = 1 / 25;
-
-const mapBorderWidth = 2;
+import { itemsCount, mapFactor, mapBorderWidth } from 'dojo-halloween/src/helpers/constants';
+import { generateRandomCoordinates } from 'dojo-halloween/src/helpers/itemsHelper';
 
 const { width: backgroundWidth, height: backgroundHeight } = Image.resolveAssetSource(
   backgroundImage
@@ -34,6 +32,8 @@ const characterDirections = {
   left: characterLeft,
   right: characterRight,
 };
+
+const itemsList = generateRandomCoordinates(itemsCount, background.x, background.y);
 
 export default class App extends React.Component<*, StateType> {
   state: StateType = {
@@ -150,7 +150,7 @@ export default class App extends React.Component<*, StateType> {
           <Items
             goodPress={() => Alert.alert('Coucou')}
             badPress={() => this.toggleSlenderManModal(true)}
-            background={background}
+            itemsList={itemsList}
           />
         </View>
         <Image
@@ -158,6 +158,19 @@ export default class App extends React.Component<*, StateType> {
           source={characterDirections[this.state.characterDirection]}
         />
         <MinimapContainerView pointerEvents={'box-none'}>
+          {itemsList.map((item, i) => (
+            <View
+              key={i}
+              style={{
+                position: 'absolute',
+                top: item.y * mapFactor,
+                left: item.x * mapFactor,
+                height: 2,
+                width: 2,
+                backgroundColor: 'red',
+              }}
+            />
+          ))}
           <MinimapView
             pointerEvents={'box-none'}
             left={this.getMinimapMargin('x')}
