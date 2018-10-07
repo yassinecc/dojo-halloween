@@ -3,12 +3,12 @@
 import { threshold, zoneRadius, markerSize } from './constants';
 
 const doPointsCollide = (pointA: Point<number>, pointB: Point<number>) => {
-  const squareLength = markerSize + zoneRadius;
+  const squareLength = type => markerSize(type) + zoneRadius(type);
   return !(
-    pointA.x + zoneRadius > pointB.x + squareLength ||
-    pointA.y + zoneRadius > pointB.y + squareLength ||
-    pointB.x + zoneRadius > pointA.x + squareLength ||
-    pointB.y + zoneRadius > pointA.y + squareLength
+    pointA.x + zoneRadius(pointA.type) > pointB.x + squareLength(pointB.type) ||
+    pointA.y + zoneRadius(pointA.type) > pointB.y + squareLength(pointB.type) ||
+    pointB.x + zoneRadius(pointB.type) > pointA.x + squareLength(pointA.type) ||
+    pointB.y + zoneRadius(pointB.type) > pointA.y + squareLength(pointA.type)
   );
 };
 

@@ -20,8 +20,8 @@ const Box = (item, i, onPress) => (
       position: 'absolute',
       top: item.y,
       left: item.x,
-      height: markerSize,
-      width: markerSize,
+      height: markerSize(item.type),
+      width: markerSize(item.type),
       backgroundColor: 'rgb(205,130, 230)',
     }}
   />
@@ -34,8 +34,8 @@ const Danger = (item, i, onPress) => (
       position: 'absolute',
       top: item.y,
       left: item.x,
-      height: 6 * markerSize + 2 * 1.5 * zoneRadius,
-      width: 6 * markerSize + 2 * 1.5 * zoneRadius,
+      height: markerSize(item.type) + 2 * zoneRadius(item.type),
+      width: markerSize(item.type) + 2 * zoneRadius(item.type),
       backgroundColor: debugMode ? 'rgba(255,130, 130, 0.3)' : 'transparent',
     }}
   >
@@ -43,11 +43,11 @@ const Danger = (item, i, onPress) => (
       onPress={onPress}
       style={{
         position: 'absolute',
-        top: zoneRadius,
-        left: zoneRadius,
+        top: zoneRadius(item.type),
+        left: zoneRadius(item.type),
         backgroundColor: debugMode ? 'blue' : 'transparent',
-        height: markerSize * 6,
-        width: markerSize * 6,
+        height: markerSize(item.type),
+        width: markerSize(item.type),
       }}
     />
   </View>
