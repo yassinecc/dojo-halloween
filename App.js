@@ -125,7 +125,7 @@ export default class App extends React.Component<*, StateType> {
   });
 
   render() {
-    this.state.gyroscopeData.y > 2 && Alert.alert('Box unlocked');
+    this.state.gyroscopeData.y > 8 && Alert.alert('Box unlocked');
     const { initial, delta } = this.state;
     const imageStyle = {
       left: initial.x + delta.x,
