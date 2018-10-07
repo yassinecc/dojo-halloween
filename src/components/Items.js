@@ -12,6 +12,7 @@ export default class Items extends React.Component<PropsType, *> {
         key={i}
         pointerEvents={'box-none'}
         style={{
+          position: 'absolute',
           top: item.y,
           left: item.x,
           height: markerSize + 2 * zoneRadius,
