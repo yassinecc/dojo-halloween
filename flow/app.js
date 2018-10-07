@@ -26,3 +26,8 @@ declare type EventEmitter<T: string> = {
   listeners(eventType: T): [EmitterSubscription<T>],
   removeListener(eventType: T, listener: Function): void,
 };
+
+declare type Point<T> = {
+  x: T,
+  y: T,
+};
