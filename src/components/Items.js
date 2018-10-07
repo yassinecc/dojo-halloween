@@ -2,50 +2,16 @@
 
 import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
+import {
+  generateItemType,
+  generateRandomCoordinates,
+} from 'dojo-halloween/src/helpers/itemsHelper';
 
-const itemsCount = 20;
-
-const threshold = 0.7;
-
-const zoneRadius = 100;
-
-const markerSize = 20;
+import { itemsCount, zoneRadius, markerSize } from 'dojo-halloween/src/helpers/constants';
 export default class Items extends React.Component<PropsType, *> {
-  generateItemType = (size: number): Array<string> => {
-    return Array(size)
-      .fill(0)
-      .map(n => (Math.random() > threshold ? 'good' : 'bad'));
-  };
-
-  doPointsCollide = (pointA: Point<number>, pointB: Point<number>) => {
-    const squareLength = markerSize + zoneRadius;
-    return !(
-      pointA.x + zoneRadius > pointB.x + squareLength ||
-      pointA.y + zoneRadius > pointB.y + squareLength ||
-      pointB.x + zoneRadius > pointA.x + squareLength ||
-      pointB.y + zoneRadius > pointA.y + squareLength
-    );
-  };
-
-  generateRandomCoordinates = (size: number, maxDimensionX: number, maxDimensionY: number) => {
-    if (maxDimensionX < size || maxDimensionY < size) {
-      console.warn('Cannot generate random coordinates', { size, maxDimensionX, maxDimensionY });
-      return [];
-    }
-    let array = [];
-    while (array.length < size) {
-      const randomX = Math.floor(Math.random() * maxDimensionX);
-      const randomY = Math.floor(Math.random() * maxDimensionY);
-      const newPoint = { x: randomX, y: randomY };
-      if (array.some((element: Point<number>) => this.doPointsCollide(element, newPoint))) continue;
-      array.push(newPoint);
-    }
-    return array;
-  };
-
   itemsProperties = {
-    type: this.generateItemType(itemsCount),
-    coordinates: this.generateRandomCoordinates(
+    type: generateItemType(itemsCount),
+    coordinates: generateRandomCoordinates(
       itemsCount,
       this.props.background.x,
       this.props.background.y
