@@ -71,6 +71,9 @@ export default class App extends React.Component<*, StateType> {
     if (!prevState.showSlenderManModal && this.state.showSlenderManModal) {
       setTimeout(() => this.setState({ showSlenderManModal: false }), 1500);
     }
+    if (prevState.gyroscopeData.y <= 7 && this.state.gyroscopeData.y > 7) {
+      Alert.alert('Félicitations', 'Coffre ouvert');
+    }
   }
 
   toggleSlenderManModal = (showModal: boolean) => {
@@ -125,7 +128,6 @@ export default class App extends React.Component<*, StateType> {
   });
 
   render() {
-    this.state.gyroscopeData.y > 8 && Alert.alert('Box unlocked');
     const { initial, delta } = this.state;
     const imageStyle = {
       left: initial.x + delta.x,
