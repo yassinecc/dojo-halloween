@@ -1,12 +1,8 @@
+// @flow
+
 import { threshold, zoneRadius, markerSize } from './constants';
 
-export const generateItemType = (size: number): Array<string> => {
-  return Array(size)
-    .fill(0)
-    .map(n => (Math.random() > threshold ? 'good' : 'bad'));
-};
-
-doPointsCollide = (pointA: Point<number>, pointB: Point<number>) => {
+const doPointsCollide = (pointA: Point<number>, pointB: Point<number>) => {
   const squareLength = markerSize + zoneRadius;
   return !(
     pointA.x + zoneRadius > pointB.x + squareLength ||
@@ -31,6 +27,7 @@ export const generateRandomCoordinates = (
     const randomY = Math.floor(Math.random() * maxDimensionY);
     const newPoint = { x: randomX, y: randomY };
     if (array.some((element: Point<number>) => doPointsCollide(element, newPoint))) continue;
+    newPoint.type = Math.random() > threshold ? 'good' : 'bad';
     array.push(newPoint);
   }
   return array;
