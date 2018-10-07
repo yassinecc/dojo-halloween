@@ -169,7 +169,7 @@ export default class App extends React.Component<*, StateType> {
                 left: item.x * mapFactor,
                 height: 2,
                 width: 2,
-                backgroundColor: 'red',
+                backgroundColor: item.type === 'good' ? 'red' : 'transparent',
               }}
             />
           ))}

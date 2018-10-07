@@ -25,9 +25,8 @@ export const generateRandomCoordinates = (
   while (array.length < size) {
     const randomX = Math.floor(Math.random() * maxDimensionX);
     const randomY = Math.floor(Math.random() * maxDimensionY);
-    const newPoint = { x: randomX, y: randomY };
+    const newPoint = { x: randomX, y: randomY, type: Math.random() > threshold ? 'good' : 'bad' };
     if (array.some((element: Point<number>) => doPointsCollide(element, newPoint))) continue;
-    newPoint.type = Math.random() > threshold ? 'good' : 'bad';
     array.push(newPoint);
   }
   return array;
