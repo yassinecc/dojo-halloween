@@ -1,7 +1,16 @@
 // @flow
 
 import React from 'react';
-import { StyleSheet, Image, View, PanResponder, Dimensions, Modal, Alert } from 'react-native';
+import {
+  StyleSheet,
+  Image,
+  View,
+  PanResponder,
+  Dimensions,
+  Modal,
+  Alert,
+  Vibration,
+} from 'react-native';
 import { Gyroscope } from 'expo';
 import styled from 'styled-components';
 import {
@@ -77,7 +86,10 @@ export default class App extends React.Component<*, StateType> {
     this.isInDanger = itemsList.some(element => {
       return doPointsCollide(element, charItem);
     });
-    this.isInDanger && console.warn(this.isInDanger);
+    if (this.isInDanger) {
+      Vibration.vibrate(500);
+      console.log(this.isInDanger);
+    }
     if (!prevState.showSlenderManModal && this.state.showSlenderManModal) {
       setTimeout(() => this.setState({ showSlenderManModal: false }), 1500);
     }
