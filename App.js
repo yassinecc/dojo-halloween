@@ -22,7 +22,12 @@ import {
   characterRight,
 } from 'dojo-halloween/assets/';
 import { LifeStatus, Items, Sound } from 'dojo-halloween/src/components';
-import { itemsCount, mapFactor, mapBorderWidth } from 'dojo-halloween/src/helpers/constants';
+import {
+  itemsCount,
+  mapFactor,
+  mapBorderWidth,
+  debugMode,
+} from 'dojo-halloween/src/helpers/constants';
 import { generateRandomCoordinates, doPointsCollide } from 'dojo-halloween/src/helpers/itemsHelper';
 
 const { width: backgroundWidth, height: backgroundHeight } = Image.resolveAssetSource(
@@ -149,6 +154,17 @@ export default class App extends React.Component<*, StateType> {
     },
   });
 
+  minimapItemColor = (type: string) => {
+    switch (type) {
+      case 'good':
+        return 'red';
+      case 'bad':
+        return debugMode ? 'blue' : 'transparent';
+      default:
+        return 'transparent';
+    }
+  };
+
   render() {
     const { initial, delta } = this.state;
     const imageStyle = {
@@ -191,7 +207,7 @@ export default class App extends React.Component<*, StateType> {
                 left: item.x * mapFactor,
                 height: 2,
                 width: 2,
-                backgroundColor: item.type === 'good' ? 'red' : 'transparent',
+                backgroundColor: this.minimapItemColor(item.type),
               }}
             />
           ))}

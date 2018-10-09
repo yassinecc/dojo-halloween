@@ -4,12 +4,7 @@ import React from 'react';
 import { View, TouchableOpacity } from 'react-native';
 import { generateRandomCoordinates } from 'dojo-halloween/src/helpers/itemsHelper';
 
-import {
-  itemsCount,
-  zoneRadius,
-  markerSize,
-  debugMode,
-} from 'dojo-halloween/src/helpers/constants';
+import { itemsCount, zoneRadius, markerSize } from 'dojo-halloween/src/helpers/constants';
 
 const Box = (item, i, onPress) => (
   <TouchableOpacity
@@ -36,7 +31,6 @@ const Danger = (item, i, onPress) => (
       left: item.x - zoneRadius(item.type),
       height: 2 * zoneRadius(item.type) + markerSize(item.type),
       width: 2 * zoneRadius(item.type) + markerSize(item.type),
-      backgroundColor: debugMode ? 'rgba(255,130, 130, 0.3)' : 'transparent',
     }}
   >
     <TouchableOpacity
@@ -45,7 +39,6 @@ const Danger = (item, i, onPress) => (
         position: 'absolute',
         top: zoneRadius(item.type),
         left: zoneRadius(item.type),
-        backgroundColor: debugMode ? 'blue' : 'transparent',
         height: markerSize(item.type),
         width: markerSize(item.type),
       }}
