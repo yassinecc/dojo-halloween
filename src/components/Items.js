@@ -32,10 +32,10 @@ const Danger = (item, i, onPress) => (
     pointerEvents={'box-none'}
     style={{
       position: 'absolute',
-      top: item.y,
-      left: item.x,
-      height: markerSize(item.type) + 2 * zoneRadius(item.type),
-      width: markerSize(item.type) + 2 * zoneRadius(item.type),
+      top: item.y - zoneRadius(item.type),
+      left: item.x - zoneRadius(item.type),
+      height: 2 * zoneRadius(item.type) + markerSize(item.type),
+      width: 2 * zoneRadius(item.type) + markerSize(item.type),
       backgroundColor: debugMode ? 'rgba(255,130, 130, 0.3)' : 'transparent',
     }}
   >

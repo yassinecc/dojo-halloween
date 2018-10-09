@@ -14,7 +14,7 @@ import {
 } from 'dojo-halloween/assets/';
 import { LifeStatus, Items, Sound } from 'dojo-halloween/src/components';
 import { itemsCount, mapFactor, mapBorderWidth } from 'dojo-halloween/src/helpers/constants';
-import { generateRandomCoordinates } from 'dojo-halloween/src/helpers/itemsHelper';
+import { generateRandomCoordinates, doPointsCollide } from 'dojo-halloween/src/helpers/itemsHelper';
 
 const { width: backgroundWidth, height: backgroundHeight } = Image.resolveAssetSource(
   backgroundImage
@@ -49,12 +49,13 @@ export default class App extends React.Component<*, StateType> {
       y: 0,
     },
     start: {
-      x: null,
-      y: null,
+      x: 0,
+      y: 0,
     },
   };
 
   subscription: EmitterSubscription<*>;
+  isInDanger: boolean;
 
   componentDidMount() {
     Sound.init();
@@ -68,6 +69,15 @@ export default class App extends React.Component<*, StateType> {
   }
 
   componentDidUpdate(_: any, prevState: StateType) {
+    const charItem = {
+      x: background.x / 2 - this.state.initial.x - this.state.delta.x - 30,
+      y: background.y / 2 - this.state.initial.y - this.state.delta.y - 30,
+      type: 'character',
+    };
+    this.isInDanger = itemsList.some(element => {
+      return doPointsCollide(element, charItem);
+    });
+    this.isInDanger && console.warn(this.isInDanger);
     if (!prevState.showSlenderManModal && this.state.showSlenderManModal) {
       setTimeout(() => this.setState({ showSlenderManModal: false }), 1500);
     }
@@ -212,8 +222,8 @@ type StateType = {
     y: number,
   },
   start: {
-    x: ?number,
-    y: ?number,
+    x: number,
+    y: number,
   },
 };
 
