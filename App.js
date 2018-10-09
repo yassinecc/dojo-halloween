@@ -28,7 +28,11 @@ import {
   mapBorderWidth,
   debugMode,
 } from 'dojo-halloween/src/helpers/constants';
-import { generateRandomCoordinates, doPointsCollide } from 'dojo-halloween/src/helpers/itemsHelper';
+import {
+  generateRandomCoordinates,
+  doPointsCollide,
+  getSquareDistance,
+} from 'dojo-halloween/src/helpers/itemsHelper';
 
 const { width: backgroundWidth, height: backgroundHeight } = Image.resolveAssetSource(
   backgroundImage
@@ -54,6 +58,8 @@ export default class App extends React.Component<*, StateType> {
     gyroscopeData: { x: 0, y: 0, z: 0 },
     characterDirection: 'down',
     showSlenderManModal: false,
+    isInDanger: false,
+    collidingElement: null,
     initial: {
       x: 0,
       y: 0,
@@ -69,7 +75,6 @@ export default class App extends React.Component<*, StateType> {
   };
 
   subscription: EmitterSubscription<*>;
-  isInDanger: boolean;
 
   componentDidMount() {
     Sound.init();
@@ -88,25 +93,36 @@ export default class App extends React.Component<*, StateType> {
       y: background.y / 2 - this.state.initial.y - this.state.delta.y - 30,
       type: 'character',
     };
-    this.isInDanger = itemsList.some(element => {
-      return doPointsCollide(element, charItem);
-    });
-    if (this.isInDanger) {
+    const collidingElement = itemsList.find(
+      (element: Point<number>) => element.type === 'bad' && doPointsCollide(element, charItem)
+    );
+    // Set inDanger flag when entering danger zone
+    if (!prevState.collidingElement && collidingElement) {
       Vibration.vibrate(500);
-      console.log(this.isInDanger);
+      this.setState({ collidingElement, isInDanger: true });
     }
+    // Reset when exiting danger zone
+    if (prevState.collidingElement && !collidingElement) {
+      this.setState({ collidingElement: null });
+    }
+    if (
+      !this.state.showSlenderManModal &&
+      this.state.isInDanger &&
+      collidingElement &&
+      getSquareDistance(collidingElement, charItem) < 10000
+    ) {
+      Sound.playScream();
+      this.setState({ showSlenderManModal: true });
+    }
+    // Auto hide slenderManModal
     if (!prevState.showSlenderManModal && this.state.showSlenderManModal) {
-      setTimeout(() => this.setState({ showSlenderManModal: false }), 1500);
+      setTimeout(() => this.setState({ showSlenderManModal: false, isInDanger: false }), 1500);
     }
+    // Gyroscope transition
     if (prevState.gyroscopeData.y <= 7 && this.state.gyroscopeData.y > 7) {
       Alert.alert('Félicitations', 'Coffre ouvert');
     }
   }
-
-  toggleSlenderManModal = (showModal: boolean) => {
-    Sound.playScream();
-    this.setState({ showSlenderManModal: showModal });
-  };
 
   onImageLayout = (event: ViewLayoutEvent) => {
     const { x, y } = event.nativeEvent.layout;
@@ -187,11 +203,7 @@ export default class App extends React.Component<*, StateType> {
           {...this.panResponder.panHandlers}
         />
         <View style={itemContainerStyle} pointerEvents={'box-none'}>
-          <Items
-            goodPress={() => Alert.alert('Coucou')}
-            badPress={() => this.toggleSlenderManModal(true)}
-            itemsList={itemsList}
-          />
+          <Items goodPress={() => Alert.alert('Coucou')} itemsList={itemsList} />
         </View>
         <Image
           style={{ position: 'absolute' }}
@@ -241,6 +253,8 @@ type StateType = {
   },
   characterDirection: 'up' | 'down' | 'left' | 'right',
   showSlenderManModal: boolean,
+  isInDanger: boolean,
+  collidingElement: ?Point<number>,
   initial: {
     x: number,
     y: number,

@@ -16,6 +16,9 @@ export const doPointsCollide = (pointA: Point<number>, pointB: Point<number>) =>
   );
 };
 
+export const getSquareDistance = (pointA: Point<number>, pointB: Point<number>) =>
+  (pointA.x - pointB.x) ** 2 + (pointA.y - pointB.y) ** 2;
+
 export const generateRandomCoordinates = (
   size: number,
   maxDimensionX: number,

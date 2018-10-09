@@ -21,7 +21,7 @@ const Box = (item, i, onPress) => (
     }}
   />
 );
-const Danger = (item, i, onPress) => (
+const Danger = (item, i) => (
   <View
     key={i}
     pointerEvents={'box-none'}
@@ -33,8 +33,7 @@ const Danger = (item, i, onPress) => (
       width: 2 * zoneRadius(item.type) + markerSize(item.type),
     }}
   >
-    <TouchableOpacity
-      onPress={onPress}
+    <View
       style={{
         position: 'absolute',
         top: zoneRadius(item.type),
@@ -48,16 +47,12 @@ const Danger = (item, i, onPress) => (
 export default class Items extends React.Component<PropsType, *> {
   render() {
     return this.props.itemsList.map(
-      (item, i) =>
-        item.type === 'good'
-          ? Box(item, i, this.props.goodPress)
-          : Danger(item, i, this.props.badPress)
+      (item, i) => (item.type === 'good' ? Box(item, i, this.props.goodPress) : Danger(item, i))
     );
   }
 }
 
 type PropsType = {
   goodPress: () => void,
-  badPress: () => void,
   itemsList: Array<Point<number>>,
 };
