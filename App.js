@@ -53,7 +53,7 @@ const characterDirections: {| up: Image, down: Image, left: Image, right: Image 
   right: characterRight,
 };
 
-const itemsList = generateRandomCoordinates(itemsCount, background.x, background.y);
+const itemsList = generateRandomCoordinates(background.x, background.y);
 
 export default class App extends React.Component<*, StateType> {
   state: StateType = {

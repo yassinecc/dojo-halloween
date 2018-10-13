@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { View, Image } from 'react-native';
-import { generateRandomCoordinates } from 'dojo-halloween/src/helpers/itemsHelper';
 import { closedChest, openChest } from 'dojo-halloween/assets';
 
 import { itemsCount, zoneRadius, markerSize } from 'dojo-halloween/src/helpers/constants';
