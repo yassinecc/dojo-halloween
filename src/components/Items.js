@@ -2,29 +2,37 @@
 
 import React from 'react';
 import { View, Image } from 'react-native';
-import { closedChest, openChest } from 'dojo-halloween/assets';
+import { closedChest, openChest, closedFinalChest, openFinalChest } from 'dojo-halloween/assets';
 
 import { itemsCount, zoneRadius, markerSize } from 'dojo-halloween/src/helpers/constants';
 
-const Box = (item, isFound) => (
-  <View
-    key={item.key}
-    pointerEvents={'box-none'}
-    style={{
-      position: 'absolute',
-      top: item.y,
-      left: item.x,
-      height: markerSize(item.type),
-      width: markerSize(item.type),
-    }}
-  >
-    <Image
-      height={markerSize(item.type)}
-      width={markerSize(item.type)}
-      source={isFound ? openChest : closedChest}
-    />
-  </View>
-);
+const Box = (item, isFound, isFinalChestVisible) => {
+  const image =
+    item.type === 'treasure'
+      ? isFound
+        ? openFinalChest
+        : closedFinalChest
+      : isFound
+        ? openChest
+        : closedChest;
+  return (
+    (item.type === 'good' || isFinalChestVisible) && (
+      <View
+        key={item.key}
+        pointerEvents={'box-none'}
+        style={{
+          position: 'absolute',
+          top: item.y,
+          left: item.x,
+          height: markerSize(item.type),
+          width: markerSize(item.type),
+        }}
+      >
+        <Image height={markerSize(item.type)} width={markerSize(item.type)} source={image} />
+      </View>
+    )
+  );
+};
 const Danger = item => (
   <View
     key={item.key}
@@ -59,6 +67,7 @@ export default class Items extends React.Component<PropsType, *> {
 }
 
 type PropsType = {
+  isFinalChestVisible: boolean,
   foundTreasures: Array<number>,
   itemsList: Array<Point<number>>,
 };

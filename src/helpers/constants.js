@@ -1,7 +1,7 @@
 // @flow
 
 export const slenderMenCount = 3;
-export const treasuresCount = 4;
+export const treasuresCount = 2;
 
 export const itemsCount = slenderMenCount + treasuresCount + 1;
 

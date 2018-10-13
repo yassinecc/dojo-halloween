@@ -26,6 +26,7 @@ import {
 import { LifeStatus, Items, Sound } from 'dojo-halloween/src/components';
 import {
   itemsCount,
+  treasuresCount,
   mapFactor,
   mapBorderWidth,
   debugMode,
@@ -62,6 +63,7 @@ export default class App extends React.Component<*, StateType> {
     showSlenderManModal: false,
     keysNumber: 0,
     openedItemsKeys: [],
+    isFinalChestVisible: false,
     isInDanger: false,
     collidingElement: null,
     showTreasureIndication: false,
@@ -140,8 +142,15 @@ export default class App extends React.Component<*, StateType> {
       prevState.gyroscopeData.y <= 7 &&
       this.state.gyroscopeData.y > 7
     ) {
-      const openedItems: Array<number> = [...this.state.openedItemsKeys, collidingTreasure.key];
-      this.setState({ keysNumber: this.state.keysNumber + 1, openedItemsKeys: uniq(openedItems) });
+      const openedItems: Array<number> = uniq([
+        ...this.state.openedItemsKeys,
+        collidingTreasure.key,
+      ]);
+      this.setState({
+        keysNumber: this.state.keysNumber + 1,
+        openedItemsKeys: openedItems,
+        isFinalChestVisible: openedItems.length === treasuresCount,
+      });
       Alert.alert('Félicitations', 'Coffre ouvert');
     }
   }
@@ -196,6 +205,8 @@ export default class App extends React.Component<*, StateType> {
     switch (type) {
       case 'good':
         return 'red';
+      case 'treasure':
+        return debugMode ? 'gold' : 'transparent';
       case 'bad':
         return debugMode ? 'blue' : 'transparent';
       default:
@@ -225,26 +236,33 @@ export default class App extends React.Component<*, StateType> {
           {...this.panResponder.panHandlers}
         />
         <View style={itemContainerStyle} pointerEvents={'box-none'}>
-          <Items foundTreasures={this.state.openedItemsKeys} itemsList={itemsList} />
+          <Items
+            isFinalChestVisible={this.state.isFinalChestVisible}
+            foundTreasures={this.state.openedItemsKeys}
+            itemsList={itemsList}
+          />
         </View>
         <Image
           style={{ position: 'absolute' }}
           source={characterDirections[this.state.characterDirection]}
         />
         <MinimapContainerView pointerEvents={'box-none'}>
-          {itemsList.map(item => (
-            <View
-              key={item.key}
-              style={{
-                position: 'absolute',
-                top: item.y * mapFactor,
-                left: item.x * mapFactor,
-                height: 2,
-                width: 2,
-                backgroundColor: this.minimapItemColor(item.type),
-              }}
-            />
-          ))}
+          {itemsList.map(
+            item =>
+              (item.type !== 'treasure' || this.state.isFinalChestVisible) && (
+                <View
+                  key={item.key}
+                  style={{
+                    position: 'absolute',
+                    top: item.y * mapFactor,
+                    left: item.x * mapFactor,
+                    height: 2,
+                    width: 2,
+                    backgroundColor: this.minimapItemColor(item.type),
+                  }}
+                />
+              )
+          )}
           <MinimapView
             pointerEvents={'box-none'}
             left={this.getMinimapMargin('x')}
@@ -292,6 +310,7 @@ type StateType = {
   characterDirection: 'up' | 'down' | 'left' | 'right',
   showSlenderManModal: boolean,
   showTreasureIndication: boolean,
+  isFinalChestVisible: boolean,
   isInDanger: boolean,
   collidingElement: ?Point<number>,
   initial: {
