@@ -12,6 +12,7 @@ import {
   Vibration,
   Text,
 } from 'react-native';
+import uniq from 'lodash/uniq';
 import { Gyroscope } from 'expo';
 import styled from 'styled-components';
 import {
@@ -60,6 +61,7 @@ export default class App extends React.Component<*, StateType> {
     characterDirection: 'down',
     showSlenderManModal: false,
     keysNumber: 0,
+    openedItemsKeys: [],
     isInDanger: false,
     collidingElement: null,
     showTreasureIndication: false,
@@ -133,11 +135,13 @@ export default class App extends React.Component<*, StateType> {
     }
     // Gyroscope transition
     if (
-      this.state.showTreasureIndication &&
+      collidingTreasure &&
+      collidingTreasure.key &&
       prevState.gyroscopeData.y <= 7 &&
       this.state.gyroscopeData.y > 7
     ) {
-      this.setState({ keysNumber: this.state.keysNumber + 1 });
+      const openedItems: Array<number> = [...this.state.openedItemsKeys, collidingTreasure.key];
+      this.setState({ keysNumber: this.state.keysNumber + 1, openedItemsKeys: uniq(openedItems) });
       Alert.alert('Félicitations', 'Coffre ouvert');
     }
   }
@@ -284,6 +288,7 @@ type StateType = {
     z: number,
   },
   keysNumber: number,
+  openedItemsKeys: Array<number>,
   characterDirection: 'up' | 'down' | 'left' | 'right',
   showSlenderManModal: boolean,
   showTreasureIndication: boolean,
