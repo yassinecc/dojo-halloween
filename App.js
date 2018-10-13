@@ -10,6 +10,7 @@ import {
   Modal,
   Alert,
   Vibration,
+  Text,
 } from 'react-native';
 import { Gyroscope } from 'expo';
 import styled from 'styled-components';
@@ -60,6 +61,7 @@ export default class App extends React.Component<*, StateType> {
     showSlenderManModal: false,
     isInDanger: false,
     collidingElement: null,
+    showTreasureIndication: false,
     initial: {
       x: 0,
       y: 0,
@@ -96,6 +98,15 @@ export default class App extends React.Component<*, StateType> {
     const collidingElement = itemsList.find(
       (element: Point<number>) => element.type === 'bad' && doPointsCollide(element, charItem)
     );
+    const collidingTreasure = itemsList.find(
+      (element: Point<number>) => element.type === 'good' && doPointsCollide(element, charItem)
+    );
+    if (!prevState.showTreasureIndication && collidingTreasure) {
+      this.setState({ showTreasureIndication: true });
+    }
+    if (prevState.showTreasureIndication && !collidingTreasure) {
+      this.setState({ showTreasureIndication: false });
+    }
     // Set inDanger flag when entering danger zone
     if (!prevState.collidingElement && collidingElement) {
       Vibration.vibrate(500);
@@ -230,6 +241,20 @@ export default class App extends React.Component<*, StateType> {
           />
         </MinimapContainerView>
         <LifeStatus />
+        {this.state.showTreasureIndication && (
+          <View
+            pointerEvents="box-none"
+            style={{
+              flex: 1,
+              position: 'absolute',
+              bottom: 16,
+              backgroundColor: 'rgba(0,0,0,0.6)',
+              alignSelf: 'center',
+            }}
+          >
+            <Text style={{ padding: 32, flex: 1, color: 'white' }}>Ouvrez le coffre!</Text>
+          </View>
+        )}
         <Modal
           transparent
           animationType={'fade'}
@@ -253,6 +278,7 @@ type StateType = {
   },
   characterDirection: 'up' | 'down' | 'left' | 'right',
   showSlenderManModal: boolean,
+  showTreasureIndication: boolean,
   isInDanger: boolean,
   collidingElement: ?Point<number>,
   initial: {
