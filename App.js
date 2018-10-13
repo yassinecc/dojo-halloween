@@ -277,17 +277,8 @@ export default class App extends React.Component<*, StateType> {
         </MinimapContainerView>
         <LifeStatus />
         {this.state.showTreasureIndication && (
-          <View
-            pointerEvents="box-none"
-            style={{
-              flex: 1,
-              position: 'absolute',
-              bottom: 16,
-              backgroundColor: 'rgba(0,0,0,0.6)',
-              alignSelf: 'center',
-            }}
-          >
-            <Text style={{ padding: 32, flex: 1, color: 'white' }}>Ouvrez le coffre!</Text>
+          <View pointerEvents="box-none" style={styles.treasureTextView}>
+            <Text style={styles.treasureText}>Ouvrez le coffre!</Text>
           </View>
         )}
         <Modal
@@ -369,5 +360,17 @@ const styles: { [key: string]: Object } = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(93,93,93,0.5)',
+  },
+  treasureTextView: {
+    flex: 1,
+    position: 'absolute',
+    bottom: 16,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    alignSelf: 'center',
+  },
+  treasureText: {
+    padding: 32,
+    flex: 1,
+    color: 'white',
   },
 });
