@@ -155,7 +155,7 @@ export default class App extends React.Component<*, StateType> {
       prevState.gyroscopeData.y <= 7 &&
       this.state.gyroscopeData.y > 7
     ) {
-      const openedItems: Array<number> = uniq([
+      const openedItems: Array<string> = uniq([
         ...this.state.openedItemsKeys,
         collidingTreasure.key,
       ]);
@@ -315,7 +315,7 @@ type StateType = {
     z: number,
   },
   keysNumber: number,
-  openedItemsKeys: Array<number>,
+  openedItemsKeys: Array<string>,
   characterDirection: 'up' | 'down' | 'left' | 'right',
   showSlenderManModal: boolean,
   showTreasureIndication: boolean,
