@@ -27,6 +27,9 @@ export const doPointsCollide = (pointA: Point<number>, pointB: Point<number>) =>
 export const getSquareDistance = (pointA: Point<number>, pointB: Point<number>) =>
   (pointA.x - pointB.x) ** 2 + (pointA.y - pointB.y) ** 2;
 
+const randX = (maxDimension: number) => Math.floor(300 + Math.random() * (maxDimension - 600));
+const randY = (maxDimension: number) => Math.floor(900 + Math.random() * (maxDimension - 1800));
+
 export const generateRandomCoordinates = (maxDimensionX: number, maxDimensionY: number) => {
   if (maxDimensionX < itemsCount || maxDimensionY < itemsCount) {
     console.warn('Cannot generate random coordinates', {
@@ -37,12 +40,12 @@ export const generateRandomCoordinates = (maxDimensionX: number, maxDimensionY: 
     return [];
   }
   let array = [];
-  const randomX = Math.floor(Math.random() * maxDimensionX);
-  const randomY = Math.floor(Math.random() * maxDimensionY);
+  const randomX = randX(maxDimensionX);
+  const randomY = randY(maxDimensionY);
   array.push({ key: 0, x: randomX, y: randomY, type: 'treasure' });
   while (array.length < itemsCount) {
-    const randomX = Math.floor(Math.random() * maxDimensionX);
-    const randomY = Math.floor(Math.random() * maxDimensionY);
+    const randomX = randX(maxDimensionX);
+    const randomY = randY(maxDimensionY);
     const newPoint = {
       key: array.length,
       x: randomX,
