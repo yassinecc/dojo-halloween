@@ -54,10 +54,8 @@ const characterDirections: {| up: Image, down: Image, left: Image, right: Image 
   right: characterRight,
 };
 
-const itemsList = generateRandomCoordinates(background.x, background.y);
-
 export default class App extends React.Component<*, StateType> {
-  state: StateType = {
+  initialState = {
     gyroscopeData: { x: 0, y: 0, z: 0 },
     characterDirection: 'down',
     showSlenderManModal: false,
@@ -81,7 +79,16 @@ export default class App extends React.Component<*, StateType> {
     },
   };
 
+  state: StateType = this.initialState;
+
   subscription: EmitterSubscription<*>;
+
+  itemsList = generateRandomCoordinates(background.x, background.y);
+
+  resetGame = () => {
+    this.itemsList = generateRandomCoordinates(background.x, background.y);
+    this.setState({ ...this.initialState });
+  };
 
   componentDidMount() {
     Sound.init();
@@ -101,17 +108,17 @@ export default class App extends React.Component<*, StateType> {
       y: background.y / 2 - this.state.initial.y - this.state.delta.y - 30,
       type: 'character',
     };
-    const collidingElement = itemsList.find(
+    const collidingElement = this.itemsList.find(
       (element: Point<number>) => element.type === 'bad' && doPointsCollide(element, charItem)
     );
-    const collidingTreasure = itemsList.find(
+    const collidingTreasure = this.itemsList.find(
       (element: Point<number>) =>
         ['good', 'treasure'].includes(element.type) && doPointsCollide(element, charItem)
     );
     if (
       !prevState.showTreasureIndication &&
       collidingTreasure &&
-      (collidingTreasure.type === 'good' || this.state.keysNumber === treasuresCount) &&
+      (collidingTreasure.type === 'good' || this.state.isFinalChestVisible) &&
       !this.state.openedItemsKeys.includes(collidingTreasure.key)
     ) {
       this.setState({ showTreasureIndication: true });
@@ -155,9 +162,14 @@ export default class App extends React.Component<*, StateType> {
       this.setState({
         keysNumber: this.state.keysNumber + 1,
         openedItemsKeys: openedItems,
-        isFinalChestVisible: openedItems.length === treasuresCount,
+        isFinalChestVisible: openedItems.length >= treasuresCount,
       });
-      Alert.alert('Félicitations', 'Coffre ouvert');
+      collidingTreasure.type === 'treasure'
+        ? Alert.alert('Félicitations', 'Tu as trouvé le dernier trésor!', [
+            { text: 'Super!', onPress: () => {} },
+            { text: 'Rejouer?', onPress: this.resetGame },
+          ])
+        : Alert.alert('Bravo', 'Coffre ouvert');
     }
   }
 
@@ -245,7 +257,7 @@ export default class App extends React.Component<*, StateType> {
           <Items
             isFinalChestVisible={this.state.isFinalChestVisible}
             foundTreasures={this.state.openedItemsKeys}
-            itemsList={itemsList}
+            itemsList={this.itemsList}
           />
         </View>
         <Image
@@ -253,7 +265,7 @@ export default class App extends React.Component<*, StateType> {
           source={characterDirections[this.state.characterDirection]}
         />
         <MinimapContainerView pointerEvents={'box-none'}>
-          {itemsList.map(
+          {this.itemsList.map(
             item =>
               (item.type !== 'treasure' || this.state.isFinalChestVisible) && (
                 <View
@@ -278,7 +290,7 @@ export default class App extends React.Component<*, StateType> {
         <LifeStatus />
         {this.state.showTreasureIndication && (
           <View pointerEvents="box-none" style={styles.treasureTextView}>
-            <Text style={styles.treasureText}>Ouvrez le coffre!</Text>
+            <Text style={styles.treasureText}>Ouvre le coffre!</Text>
           </View>
         )}
         <Modal
