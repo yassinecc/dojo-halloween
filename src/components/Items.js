@@ -61,7 +61,7 @@ export default class Items extends React.Component<PropsType, *> {
     return this.props.itemsList.map(item => {
       if (item.type === 'bad') return Danger(item);
       const isFound = this.props.foundTreasures.includes(item.key);
-      return Box(item, isFound);
+      return Box(item, isFound, this.props.isFinalChestVisible);
     });
   }
 }

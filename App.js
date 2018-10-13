@@ -105,7 +105,8 @@ export default class App extends React.Component<*, StateType> {
       (element: Point<number>) => element.type === 'bad' && doPointsCollide(element, charItem)
     );
     const collidingTreasure = itemsList.find(
-      (element: Point<number>) => element.type === 'good' && doPointsCollide(element, charItem)
+      (element: Point<number>) =>
+        ['good', 'treasure'].includes(element.type) && doPointsCollide(element, charItem)
     );
     if (
       !prevState.showTreasureIndication &&
