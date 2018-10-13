@@ -34,17 +34,17 @@ import {
   getSquareDistance,
 } from 'dojo-halloween/src/helpers/itemsHelper';
 
-const { width: backgroundWidth, height: backgroundHeight } = Image.resolveAssetSource(
+const backgroundDimensions: { width: number, height: number } = Image.resolveAssetSource(
   backgroundImage
 );
 
-const background = { x: backgroundWidth, y: backgroundHeight };
+const background = { x: backgroundDimensions.width, y: backgroundDimensions.height };
 
-const { width: screenWidth, height: screenHeight } = Dimensions.get('screen');
+const screenDimensions: { width: number, height: number } = Dimensions.get('screen');
 
-const screen = { x: screenWidth, y: screenHeight };
+const screen = { x: screenDimensions.width, y: screenDimensions.height };
 
-const characterDirections = {
+const characterDirections: {| up: Image, down: Image, left: Image, right: Image |} = {
   up: characterUp,
   down: characterDown,
   left: characterLeft,
@@ -78,7 +78,7 @@ export default class App extends React.Component<*, StateType> {
 
   componentDidMount() {
     Sound.init();
-    this.subscription = Gyroscope.addListener(result => {
+    this.subscription = Gyroscope.addListener((result: { x: number, y: number, z: number }) => {
       this.setState({ gyroscopeData: result });
     });
   }
@@ -148,7 +148,7 @@ export default class App extends React.Component<*, StateType> {
 
   panResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
-    onPanResponderMove: (_, gestureState) => {
+    onPanResponderMove: (_, gestureState: { dx: number, dy: number }) => {
       const finalDx = this.getFinalDisplacement(gestureState.dx, 'x');
       const finalDy = this.getFinalDisplacement(gestureState.dy, 'y');
       let characterDirection = this.state.characterDirection;
@@ -288,7 +288,7 @@ const MinimapView = styled.View`
   border-width: ${mapBorderWidth};
 `;
 
-const styles = StyleSheet.create({
+const styles: { [key: string]: Object } = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'black',
