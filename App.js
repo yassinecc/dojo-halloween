@@ -107,10 +107,14 @@ export default class App extends React.Component<*, StateType> {
     const collidingTreasure = itemsList.find(
       (element: Point<number>) => element.type === 'good' && doPointsCollide(element, charItem)
     );
-    if (!prevState.showTreasureIndication && collidingTreasure) {
+    if (
+      !prevState.showTreasureIndication &&
+      collidingTreasure &&
+      !this.state.openedItemsKeys.includes(collidingTreasure.key)
+    ) {
       this.setState({ showTreasureIndication: true });
     }
-    if (prevState.showTreasureIndication && !collidingTreasure) {
+    if (prevState.keysNumber !== this.state.keysNumber) {
       this.setState({ showTreasureIndication: false });
     }
     // Set inDanger flag when entering danger zone
