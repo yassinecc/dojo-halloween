@@ -42,12 +42,12 @@ export const generateRandomCoordinates = (maxDimensionX: number, maxDimensionY: 
   let array = [];
   const randomX = randX(maxDimensionX);
   const randomY = randY(maxDimensionY);
-  array.push({ key: 0, x: randomX, y: randomY, type: 'treasure' });
+  array.push({ key: '0', x: randomX, y: randomY, type: 'treasure' });
   while (array.length < itemsCount) {
     const randomX = randX(maxDimensionX);
     const randomY = randY(maxDimensionY);
     const newPoint = {
-      key: array.length,
+      key: String(array.length),
       x: randomX,
       y: randomY,
       type: Math.random() > threshold ? 'good' : 'bad',

@@ -96,7 +96,7 @@ export default class App extends React.Component<*, StateType> {
 
   componentDidUpdate(_: any, prevState: StateType) {
     const charItem = {
-      key: itemsCount,
+      key: String(itemsCount),
       x: background.x / 2 - this.state.initial.x - this.state.delta.x - 30,
       y: background.y / 2 - this.state.initial.y - this.state.delta.y - 30,
       type: 'character',
@@ -111,6 +111,7 @@ export default class App extends React.Component<*, StateType> {
     if (
       !prevState.showTreasureIndication &&
       collidingTreasure &&
+      (collidingTreasure.type === 'good' || this.state.keysNumber === treasuresCount) &&
       !this.state.openedItemsKeys.includes(collidingTreasure.key)
     ) {
       this.setState({ showTreasureIndication: true });

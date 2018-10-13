@@ -28,7 +28,7 @@ declare type EventEmitter<T: string> = {
 };
 
 declare type Point<T> = {
-  key: number,
+  key: string,
   x: T,
   y: T,
   type: string,
