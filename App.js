@@ -59,6 +59,7 @@ export default class App extends React.Component<*, StateType> {
     gyroscopeData: { x: 0, y: 0, z: 0 },
     characterDirection: 'down',
     showSlenderManModal: false,
+    keysNumber: 0,
     isInDanger: false,
     collidingElement: null,
     showTreasureIndication: false,
@@ -130,7 +131,12 @@ export default class App extends React.Component<*, StateType> {
       setTimeout(() => this.setState({ showSlenderManModal: false, isInDanger: false }), 1500);
     }
     // Gyroscope transition
-    if (prevState.gyroscopeData.y <= 7 && this.state.gyroscopeData.y > 7) {
+    if (
+      this.state.showTreasureIndication &&
+      prevState.gyroscopeData.y <= 7 &&
+      this.state.gyroscopeData.y > 7
+    ) {
+      this.setState({ keysNumber: this.state.keysNumber + 1 });
       Alert.alert('Félicitations', 'Coffre ouvert');
     }
   }
@@ -276,6 +282,7 @@ type StateType = {
     y: number,
     z: number,
   },
+  keysNumber: number,
   characterDirection: 'up' | 'down' | 'left' | 'right',
   showSlenderManModal: boolean,
   showTreasureIndication: boolean,
