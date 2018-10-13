@@ -38,6 +38,7 @@ export const generateRandomCoordinates = (
       y: randomY,
       type: Math.random() > threshold ? 'good' : 'bad',
     };
+    // Check if treasures can be reached
     if (array.some((element: Point<number>) => doPointsCollide(element, newPoint))) continue;
     array.push(newPoint);
   }

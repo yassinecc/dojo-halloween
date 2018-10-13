@@ -6,3 +6,5 @@ export { default as characterDown } from './down.png';
 export { default as characterUp } from './up.png';
 export { default as characterLeft } from './left.png';
 export { default as characterRight } from './right.png';
+export { default as closedChest } from './closed_chest.png';
+export { default as openChest } from './open_chest.png';

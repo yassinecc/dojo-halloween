@@ -1,14 +1,14 @@
 // @flow
 
 import React from 'react';
-import { View, TouchableOpacity } from 'react-native';
+import { View, Image } from 'react-native';
 import { generateRandomCoordinates } from 'dojo-halloween/src/helpers/itemsHelper';
+import { closedChest, openChest } from 'dojo-halloween/assets';
 
 import { itemsCount, zoneRadius, markerSize } from 'dojo-halloween/src/helpers/constants';
 
-const Box = (item, onPress) => (
-  <TouchableOpacity
-    onPress={onPress}
+const Box = (item, isFound) => (
+  <View
     key={item.key}
     pointerEvents={'box-none'}
     style={{
@@ -17,9 +17,14 @@ const Box = (item, onPress) => (
       left: item.x,
       height: markerSize(item.type),
       width: markerSize(item.type),
-      backgroundColor: 'rgb(205,130, 230)',
     }}
-  />
+  >
+    <Image
+      height={markerSize(item.type)}
+      width={markerSize(item.type)}
+      source={isFound ? openChest : closedChest}
+    />
+  </View>
 );
 const Danger = item => (
   <View
@@ -46,13 +51,15 @@ const Danger = item => (
 );
 export default class Items extends React.Component<PropsType, *> {
   render() {
-    return this.props.itemsList.map(
-      item => (item.type === 'good' ? Box(item, this.props.goodPress) : Danger(item))
-    );
+    return this.props.itemsList.map(item => {
+      if (item.type === 'bad') return Danger(item);
+      const isFound = this.props.foundTreasures.includes(item.key);
+      return Box(item, isFound);
+    });
   }
 }
 
 type PropsType = {
-  goodPress: () => void,
+  foundTreasures: Array<number>,
   itemsList: Array<Point<number>>,
 };

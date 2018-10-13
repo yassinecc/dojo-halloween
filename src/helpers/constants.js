@@ -7,7 +7,7 @@ export const threshold = 0.7;
 export const zoneRadius = (type: string): number => {
   switch (type) {
     case 'good':
-      return 100;
+      return 0;
     case 'bad':
       return 150;
     case 'character':
@@ -21,7 +21,7 @@ export const zoneRadius = (type: string): number => {
 export const markerSize = (type: string): number => {
   switch (type) {
     case 'good':
-      return 20;
+      return 38;
     case 'bad':
       return 120;
     case 'character':

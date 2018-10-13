@@ -225,7 +225,7 @@ export default class App extends React.Component<*, StateType> {
           {...this.panResponder.panHandlers}
         />
         <View style={itemContainerStyle} pointerEvents={'box-none'}>
-          <Items goodPress={() => Alert.alert('Coucou')} itemsList={itemsList} />
+          <Items foundTreasures={this.state.openedItemsKeys} itemsList={itemsList} />
         </View>
         <Image
           style={{ position: 'absolute' }}
