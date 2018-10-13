@@ -6,10 +6,10 @@ import { generateRandomCoordinates } from 'dojo-halloween/src/helpers/itemsHelpe
 
 import { itemsCount, zoneRadius, markerSize } from 'dojo-halloween/src/helpers/constants';
 
-const Box = (item, i, onPress) => (
+const Box = (item, onPress) => (
   <TouchableOpacity
     onPress={onPress}
-    key={i}
+    key={item.key}
     pointerEvents={'box-none'}
     style={{
       position: 'absolute',
@@ -21,9 +21,9 @@ const Box = (item, i, onPress) => (
     }}
   />
 );
-const Danger = (item, i) => (
+const Danger = item => (
   <View
-    key={i}
+    key={item.key}
     pointerEvents={'box-none'}
     style={{
       position: 'absolute',
@@ -47,7 +47,7 @@ const Danger = (item, i) => (
 export default class Items extends React.Component<PropsType, *> {
   render() {
     return this.props.itemsList.map(
-      (item, i) => (item.type === 'good' ? Box(item, i, this.props.goodPress) : Danger(item, i))
+      item => (item.type === 'good' ? Box(item, this.props.goodPress) : Danger(item))
     );
   }
 }

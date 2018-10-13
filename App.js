@@ -92,6 +92,7 @@ export default class App extends React.Component<*, StateType> {
 
   componentDidUpdate(_: any, prevState: StateType) {
     const charItem = {
+      key: itemsCount,
       x: background.x / 2 - this.state.initial.x - this.state.delta.x - 30,
       y: background.y / 2 - this.state.initial.y - this.state.delta.y - 30,
       type: 'character',
@@ -227,9 +228,9 @@ export default class App extends React.Component<*, StateType> {
           source={characterDirections[this.state.characterDirection]}
         />
         <MinimapContainerView pointerEvents={'box-none'}>
-          {itemsList.map((item, i) => (
+          {itemsList.map(item => (
             <View
-              key={i}
+              key={item.key}
               style={{
                 position: 'absolute',
                 top: item.y * mapFactor,
