@@ -68,6 +68,6 @@ export default class Items extends React.Component<PropsType, *> {
 
 type PropsType = {
   isFinalChestVisible: boolean,
-  foundTreasures: Array<number>,
+  foundTreasures: Array<string>,
   itemsList: Array<Point<number>>,
 };

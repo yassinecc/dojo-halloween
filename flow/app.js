@@ -16,6 +16,11 @@ declare type EmitterSubscription<T: string> = {
   remove(): void,
 };
 
+declare type SoundType = {
+  replayAsync(sound: any): Function,
+  loadAsync(sound: any): Function,
+};
+
 declare type EventEmitter<T: string> = {
   emit(eventType: T, ...args: any[]): void,
   addListener(eventType: T, listener: Function, context: ?Object): EmitterSubscription<T>,

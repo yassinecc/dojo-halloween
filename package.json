@@ -6,7 +6,8 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "coverage:flow": "flow-coverage-report -i 'src/**/*.js' -i App.js"
   },
   "dependencies": {
     "expo": "^30.0.1",

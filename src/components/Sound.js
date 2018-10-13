@@ -1,8 +1,13 @@
-const soundObject = new Expo.Audio.Sound();
+// @flow
+
+import { Audio } from 'expo';
+import { scream } from 'dojo-halloween/assets';
+
+const soundObject: SoundType = new Audio.Sound();
 
 const init = async () => {
   try {
-    await soundObject.loadAsync(require('dojo-halloween/assets/scream.mp3'));
+    await soundObject.loadAsync(scream);
     console.log('Song load successful');
   } catch (error) {
     console.log('Error in loading sound', { error });
