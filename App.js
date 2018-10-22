@@ -101,20 +101,7 @@ export default class App extends React.Component<*, StateType> {
     this.subscription && this.subscription.remove();
   }
 
-  componentDidUpdate(_: any, prevState: StateType) {
-    const charItem = {
-      key: String(itemsCount),
-      x: background.x / 2 - this.state.initial.x - this.state.delta.x - 30,
-      y: background.y / 2 - this.state.initial.y - this.state.delta.y - 30,
-      type: 'character',
-    };
-    const collidingElement = this.itemsList.find(
-      (element: Point<number>) => element.type === 'bad' && doPointsCollide(element, charItem)
-    );
-    const collidingTreasure = this.itemsList.find(
-      (element: Point<number>) =>
-        ['good', 'treasure'].includes(element.type) && doPointsCollide(element, charItem)
-    );
+  handleKeysIndicator = (prevState: StateType, collidingTreasure: ?Point<number>) => {
     if (
       !prevState.showTreasureIndication &&
       collidingTreasure &&
@@ -126,6 +113,9 @@ export default class App extends React.Component<*, StateType> {
     if (prevState.keysNumber !== this.state.keysNumber) {
       this.setState({ showTreasureIndication: false });
     }
+  };
+
+  handleCollision = (prevState: StateType, collidingElement: ?Point<number>) => {
     // Set inDanger flag when entering danger zone
     if (!prevState.collidingElement && collidingElement) {
       Vibration.vibrate(500);
@@ -135,6 +125,13 @@ export default class App extends React.Component<*, StateType> {
     if (prevState.collidingElement && !collidingElement) {
       this.setState({ collidingElement: null });
     }
+  };
+
+  handleSlenderManModal = (
+    prevState: StateType,
+    collidingElement: ?Point<number>,
+    charItem: { key: string, x: number, y: number, type: string }
+  ) => {
     if (
       !this.state.showSlenderManModal &&
       this.state.isInDanger &&
@@ -148,7 +145,9 @@ export default class App extends React.Component<*, StateType> {
     if (!prevState.showSlenderManModal && this.state.showSlenderManModal) {
       setTimeout(() => this.setState({ showSlenderManModal: false, isInDanger: false }), 1500);
     }
-    // Gyroscope transition
+  };
+
+  handleBoxOpening = (prevState: StateType, collidingTreasure: ?Point<number>) => {
     if (
       collidingTreasure &&
       collidingTreasure.key &&
@@ -171,6 +170,26 @@ export default class App extends React.Component<*, StateType> {
           ])
         : Alert.alert('Bravo', 'Coffre ouvert');
     }
+  };
+
+  componentDidUpdate(_: any, prevState: StateType) {
+    const charItem = {
+      key: String(itemsCount),
+      x: background.x / 2 - this.state.initial.x - this.state.delta.x - 30,
+      y: background.y / 2 - this.state.initial.y - this.state.delta.y - 30,
+      type: 'character',
+    };
+    const collidingElement = this.itemsList.find(
+      (element: Point<number>) => element.type === 'bad' && doPointsCollide(element, charItem)
+    );
+    const collidingTreasure = this.itemsList.find(
+      (element: Point<number>) =>
+        ['good', 'treasure'].includes(element.type) && doPointsCollide(element, charItem)
+    );
+    this.handleKeysIndicator(prevState, collidingTreasure);
+    this.handleCollision(prevState, collidingElement);
+    this.handleSlenderManModal(prevState, collidingElement, charItem);
+    this.handleBoxOpening(prevState, collidingTreasure);
   }
 
   onImageLayout = (event: ViewLayoutEvent) => {
