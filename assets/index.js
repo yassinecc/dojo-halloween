@@ -11,4 +11,5 @@ export { default as openChest } from './open_chest.png';
 export { default as closedFinalChest } from './closed_final_chest.png';
 export { default as openFinalChest } from './open_final_chest.png';
 export { default as key } from './key.png';
+export { default as noKey } from './no_key.png';
 export { default as scream } from './scream.mp3';
