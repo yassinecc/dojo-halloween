@@ -1,5 +1,5 @@
 // @flow
 
-export { default as LifeStatus } from './LifeStatus';
+export { KeysIndicator } from './KeysIndicator';
 export { default as Items } from './Items';
 export { default as Sound } from './Sound';

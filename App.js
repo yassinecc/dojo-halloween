@@ -23,7 +23,7 @@ import {
   characterLeft,
   characterRight,
 } from 'dojo-halloween/assets/';
-import { LifeStatus, Items, Sound } from 'dojo-halloween/src/components';
+import { KeysIndicator, Items, Sound } from 'dojo-halloween/src/components';
 import {
   itemsCount,
   treasuresCount,
@@ -287,7 +287,7 @@ export default class App extends React.Component<*, StateType> {
             top={this.getMinimapMargin('y')}
           />
         </MinimapContainerView>
-        <LifeStatus />
+        <KeysIndicator keysNumber={this.state.keysNumber} />
         {this.state.showTreasureIndication && (
           <View pointerEvents="box-none" style={styles.treasureTextView}>
             <Text style={styles.treasureText}>Ouvre le coffre!</Text>
