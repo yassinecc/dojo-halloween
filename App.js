@@ -23,14 +23,8 @@ import {
   characterLeft,
   characterRight,
 } from 'dojo-halloween/assets/';
-import { KeysIndicator, Items, Sound } from 'dojo-halloween/src/components';
-import {
-  itemsCount,
-  treasuresCount,
-  mapFactor,
-  mapBorderWidth,
-  debugMode,
-} from 'dojo-halloween/src/helpers/constants';
+import { KeysIndicator, Items, Sound, Minimap } from 'dojo-halloween/src/components';
+import { itemsCount, treasuresCount } from 'dojo-halloween/src/helpers/constants';
 import {
   generateRandomCoordinates,
   doPointsCollide,
@@ -209,11 +203,6 @@ export default class App extends React.Component<*, StateType> {
         );
   };
 
-  getMinimapMargin = (dimension: string) =>
-    (-this.state.start[dimension] - this.state.initial[dimension] - this.state.delta[dimension]) *
-      mapFactor -
-    mapBorderWidth;
-
   panResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
     onPanResponderMove: (_, gestureState: { dx: number, dy: number }) => {
@@ -237,19 +226,6 @@ export default class App extends React.Component<*, StateType> {
       });
     },
   });
-
-  minimapItemColor = (type: string) => {
-    switch (type) {
-      case 'good':
-        return 'red';
-      case 'treasure':
-        return debugMode ? 'gold' : 'transparent';
-      case 'bad':
-        return debugMode ? 'blue' : 'transparent';
-      default:
-        return 'transparent';
-    }
-  };
 
   render() {
     const { initial, delta } = this.state;
@@ -283,29 +259,15 @@ export default class App extends React.Component<*, StateType> {
           style={{ position: 'absolute' }}
           source={characterDirections[this.state.characterDirection]}
         />
-        <MinimapContainerView pointerEvents={'box-none'}>
-          {this.itemsList.map(
-            item =>
-              (item.type !== 'treasure' || this.state.isFinalChestVisible) && (
-                <View
-                  key={item.key}
-                  style={{
-                    position: 'absolute',
-                    top: item.y * mapFactor,
-                    left: item.x * mapFactor,
-                    height: 2,
-                    width: 2,
-                    backgroundColor: this.minimapItemColor(item.type),
-                  }}
-                />
-              )
-          )}
-          <MinimapView
-            pointerEvents={'box-none'}
-            left={this.getMinimapMargin('x')}
-            top={this.getMinimapMargin('y')}
-          />
-        </MinimapContainerView>
+        <Minimap
+          background={background}
+          screen={screen}
+          itemsList={this.itemsList}
+          isFinalChestVisible={this.state.isFinalChestVisible}
+          startDimension={this.state.start}
+          initialDimension={this.state.initial}
+          deltaDimension={this.state.delta}
+        />
         <KeysIndicator keysNumber={this.state.keysNumber} />
         {this.state.showTreasureIndication && (
           <View pointerEvents="box-none" style={styles.treasureTextView}>
@@ -354,25 +316,6 @@ type StateType = {
     y: number,
   },
 };
-
-const MinimapContainerView = styled.View`
-  height: ${background.y * mapFactor};
-  width: ${background.x * mapFactor};
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  border-color: red;
-  border-width: ${mapBorderWidth};
-  background-color: rgba(255, 0, 0, 0.3);
-`;
-
-const MinimapView = styled.View`
-  height: ${screen.y * mapFactor};
-  width: ${screen.x * mapFactor};
-  position: absolute;
-  border-color: red;
-  border-width: ${mapBorderWidth};
-`;
 
 const styles: { [key: string]: Object } = StyleSheet.create({
   container: {
