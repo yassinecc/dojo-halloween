@@ -203,28 +203,30 @@ export default class App extends React.Component<*, StateType> {
         );
   };
 
+  handleGesture = (_: any, gestureState: { dx: number, dy: number }) => {
+    const finalDx = this.getFinalDisplacement(gestureState.dx, 'x');
+    const finalDy = this.getFinalDisplacement(gestureState.dy, 'y');
+    let characterDirection = this.state.characterDirection;
+    if (Math.abs(finalDx) > Math.abs(finalDy)) {
+      characterDirection = finalDx < 0 ? 'right' : 'left';
+    } else {
+      characterDirection = finalDy < 0 ? 'down' : 'up';
+    }
+    this.setState({ delta: { x: finalDx, y: finalDy }, characterDirection });
+  };
+
+  resetDragState = () => {
+    const { initial, delta } = this.state;
+    this.setState({
+      initial: { x: initial.x + delta.x, y: initial.y + delta.y },
+      delta: { x: 0, y: 0 },
+    });
+  };
+
   panResponder = PanResponder.create({
     onStartShouldSetPanResponder: () => true,
-    onPanResponderMove: (_, gestureState: { dx: number, dy: number }) => {
-      const finalDx = this.getFinalDisplacement(gestureState.dx, 'x');
-      const finalDy = this.getFinalDisplacement(gestureState.dy, 'y');
-      let characterDirection = this.state.characterDirection;
-      if (Math.abs(finalDx) > Math.abs(finalDy)) {
-        characterDirection = finalDx < 0 ? 'right' : 'left';
-      }
-
-      if (Math.abs(finalDx) < Math.abs(finalDy)) {
-        characterDirection = finalDy < 0 ? 'down' : 'up';
-      }
-      this.setState({ delta: { x: finalDx, y: finalDy }, characterDirection });
-    },
-    onPanResponderRelease: () => {
-      const { initial, delta } = this.state;
-      this.setState({
-        initial: { x: initial.x + delta.x, y: initial.y + delta.y },
-        delta: { x: 0, y: 0 },
-      });
-    },
+    onPanResponderMove: this.handleGesture,
+    onPanResponderRelease: this.resetDragState,
   });
 
   render() {
