@@ -56,7 +56,7 @@ const Danger = item => (
     />
   </View>
 );
-export default class Items extends React.Component<PropsType, *> {
+export class Items extends React.Component<PropsType, *> {
   render() {
     return this.props.itemsList.map(item => {
       if (item.type === 'bad') return Danger(item);

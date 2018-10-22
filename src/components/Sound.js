@@ -23,4 +23,4 @@ const playScream = async () => {
   }
 };
 
-export default { init, playScream };
+export const Sound = { init, playScream };
