@@ -145,6 +145,7 @@ export default class App extends React.Component<*, StateType> {
     if (
       collidingTreasure &&
       collidingTreasure.key &&
+      !this.state.openedItemsKeys.includes(collidingTreasure.key) &&
       prevState.gyroscopeData.y <= 7 &&
       this.state.gyroscopeData.y > 7
     ) {
