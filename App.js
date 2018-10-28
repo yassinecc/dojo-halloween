@@ -1,5 +1,3 @@
-
-
 import React from 'react';
 import {
   StyleSheet,
@@ -31,24 +29,22 @@ import {
   getSquareDistance,
 } from 'dojo-halloween/src/helpers/itemsHelper';
 
-const backgroundDimensions: { width: number, height: number } = Image.resolveAssetSource(
-  backgroundImage
-);
+const backgroundDimensions = Image.resolveAssetSource(backgroundImage);
 
 const background = { x: backgroundDimensions.width, y: backgroundDimensions.height };
 
-const screenDimensions: { width: number, height: number } = Dimensions.get('screen');
+const screenDimensions = Dimensions.get('screen');
 
 const screen = { x: screenDimensions.width, y: screenDimensions.height };
 
-const characterDirections: {| up: Image, down: Image, left: Image, right: Image |} = {
+const characterDirections = {
   up: characterUp,
   down: characterDown,
   left: characterLeft,
   right: characterRight,
 };
 
-export default class App extends React.Component<*, StateType> {
+export default class App extends React.Component<*> {
   initialState = {
     gyroscopeData: { x: 0, y: 0, z: 0 },
     characterDirection: 'down',
@@ -69,11 +65,9 @@ export default class App extends React.Component<*, StateType> {
     },
   };
 
-  origin: { x: number, y: number } = { x: 0, y: 0 };
+  origin = { x: 0, y: 0 };
 
-  state: StateType = this.initialState;
-
-  subscription: EmitterSubscription<*>;
+  state = this.initialState;
 
   itemsList = generateRandomCoordinates(background.x, background.y);
 
@@ -84,7 +78,7 @@ export default class App extends React.Component<*, StateType> {
 
   componentDidMount() {
     Sound.init();
-    this.subscription = Gyroscope.addListener((result: { x: number, y: number, z: number }) => {
+    this.subscription = Gyroscope.addListener(result => {
       this.setState({ gyroscopeData: result });
     });
   }
@@ -93,7 +87,7 @@ export default class App extends React.Component<*, StateType> {
     this.subscription && this.subscription.remove();
   }
 
-  handleKeysIndicator = (prevState: StateType, collidingTreasure: ?Point<number>) => {
+  handleKeysIndicator = (prevState, collidingTreasure) => {
     if (
       !prevState.showTreasureIndication &&
       collidingTreasure &&
@@ -107,7 +101,7 @@ export default class App extends React.Component<*, StateType> {
     }
   };
 
-  handleCollision = (prevState: StateType, collidingElement: ?Point<number>) => {
+  handleCollision = (prevState, collidingElement) => {
     // Set inDanger flag when entering danger zone
     if (!prevState.collidingElement && collidingElement) {
       Vibration.vibrate(500);
@@ -119,11 +113,7 @@ export default class App extends React.Component<*, StateType> {
     }
   };
 
-  handleSlenderManModal = (
-    prevState: StateType,
-    collidingElement: ?Point<number>,
-    charItem: { key: string, x: number, y: number, type: string }
-  ) => {
+  handleSlenderManModal = (prevState, collidingElement, charItem) => {
     if (
       !this.state.showSlenderManModal &&
       this.state.isInDanger &&
@@ -139,7 +129,7 @@ export default class App extends React.Component<*, StateType> {
     }
   };
 
-  handleBoxOpening = (prevState: StateType, collidingTreasure: ?Point<number>) => {
+  handleBoxOpening = (prevState, collidingTreasure) => {
     if (
       collidingTreasure &&
       collidingTreasure.key &&
@@ -165,7 +155,7 @@ export default class App extends React.Component<*, StateType> {
     }
   };
 
-  componentDidUpdate(_: any, prevState: StateType) {
+  componentDidUpdate(_, prevState) {
     const charItem = {
       key: String(itemsCount),
       x: background.x / 2 - this.state.initial.x - this.state.delta.x - 30,
@@ -173,11 +163,10 @@ export default class App extends React.Component<*, StateType> {
       type: 'character',
     };
     const collidingElement = this.itemsList.find(
-      (element: Point<number>) => element.type === 'bad' && doPointsCollide(element, charItem)
+      element => element.type === 'bad' && doPointsCollide(element, charItem)
     );
     const collidingTreasure = this.itemsList.find(
-      (element: Point<number>) =>
-        ['good', 'treasure'].includes(element.type) && doPointsCollide(element, charItem)
+      element => ['good', 'treasure'].includes(element.type) && doPointsCollide(element, charItem)
     );
     this.handleKeysIndicator(prevState, collidingTreasure);
     this.handleCollision(prevState, collidingElement);
@@ -190,7 +179,7 @@ export default class App extends React.Component<*, StateType> {
     if (!this.origin.x || !this.origin.y) this.origin = { x, y };
   };
 
-  getFinalDisplacement = (diff: number, dimension: string) => {
+  getFinalDisplacement = (diff, dimension) => {
     return diff > 0
       ? Math.min(diff, -this.origin[dimension] - this.state.initial[dimension])
       : Math.max(
@@ -202,7 +191,7 @@ export default class App extends React.Component<*, StateType> {
         );
   };
 
-  handleGesture = (_: any, gestureState: { dx: number, dy: number }) => {
+  handleGesture = (_, gestureState) => {
     const finalDx = this.getFinalDisplacement(gestureState.dx, 'x');
     const finalDy = this.getFinalDisplacement(gestureState.dy, 'y');
     let characterDirection = this.state.characterDirection;
@@ -290,31 +279,7 @@ export default class App extends React.Component<*, StateType> {
   }
 }
 
-type StateType = {
-  gyroscopeData: {
-    x: number,
-    y: number,
-    z: number,
-  },
-  keysNumber: number,
-  openedItemsKeys: Array<string>,
-  characterDirection: 'up' | 'down' | 'left' | 'right',
-  showSlenderManModal: boolean,
-  showTreasureIndication: boolean,
-  isFinalChestVisible: boolean,
-  isInDanger: boolean,
-  collidingElement: ?Point<number>,
-  initial: {
-    x: number,
-    y: number,
-  },
-  delta: {
-    x: number,
-    y: number,
-  },
-};
-
-const styles: { [key: string]: Object } = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'black',

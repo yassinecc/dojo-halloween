@@ -8,7 +8,7 @@ import {
   itemsCount,
 } from './constants';
 
-export const doPointsCollide = (pointA: Point<number>, pointB: Point<number>) => {
+export const doPointsCollide = (pointA, pointB) => {
   const squareLength = type => markerSize(type) + 2 * zoneRadius(type);
   return !(
     pointA.x - zoneRadius(pointA.type) >
@@ -22,13 +22,13 @@ export const doPointsCollide = (pointA: Point<number>, pointB: Point<number>) =>
   );
 };
 
-export const getSquareDistance = (pointA: Point<number>, pointB: Point<number>) =>
+export const getSquareDistance = (pointA, pointB) =>
   (pointA.x - pointB.x) ** 2 + (pointA.y - pointB.y) ** 2;
 
-const randX = (maxDimension: number) => Math.floor(300 + Math.random() * (maxDimension - 600));
-const randY = (maxDimension: number) => Math.floor(900 + Math.random() * (maxDimension - 1800));
+const randX = maxDimension => Math.floor(300 + Math.random() * (maxDimension - 600));
+const randY = maxDimension => Math.floor(900 + Math.random() * (maxDimension - 1800));
 
-export const generateRandomCoordinates = (maxDimensionX: number, maxDimensionY: number) => {
+export const generateRandomCoordinates = (maxDimensionX, maxDimensionY) => {
   if (maxDimensionX < itemsCount || maxDimensionY < itemsCount) {
     console.warn('Cannot generate random coordinates', {
       itemsCount,
@@ -54,7 +54,7 @@ export const generateRandomCoordinates = (maxDimensionX: number, maxDimensionY: 
     const currentTreasures = array.filter(element => element.type === 'good').length;
     const currentSlenders = array.filter(element => element.type === 'bad').length;
     if (
-      array.some((element: Point<number>) => doPointsCollide(element, newPoint)) ||
+      array.some(element => doPointsCollide(element, newPoint)) ||
       (newPoint.type === 'good' && treasuresCount === currentTreasures) ||
       (newPoint.type === 'bad' && slenderMenCount === currentSlenders)
     )

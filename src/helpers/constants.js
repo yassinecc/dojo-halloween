@@ -5,7 +5,7 @@ export const itemsCount = slenderMenCount + treasuresCount + 1;
 
 export const threshold = 0.7;
 
-export const zoneRadius = (type: string): number => {
+export const zoneRadius = type => {
   switch (type) {
     case 'good':
     case 'treasure':
@@ -20,7 +20,7 @@ export const zoneRadius = (type: string): number => {
   }
 };
 
-export const markerSize = (type: string): number => {
+export const markerSize = type => {
   switch (type) {
     case 'good':
       return 38;

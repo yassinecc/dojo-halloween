@@ -1,27 +1,12 @@
-
-
 import React from 'react';
 import { View } from 'react-native';
 import styled from 'styled-components';
 import { mapFactor, mapBorderWidth, debugMode } from 'dojo-halloween/src/helpers/constants';
 
-type PropsType = {
-  background: { x: number, y: number },
-  screen: { x: number, y: number },
-  itemsList: Array<Point<number>>,
-  isFinalChestVisible: boolean,
-  originDimension: { x: number, y: number },
-  initialDimension: { x: number, y: number },
-  deltaDimension: { x: number, y: number },
-};
+const getMinimapMargin = (originDimension, initialDimension, deltaDimension) =>
+  (-originDimension - initialDimension - deltaDimension) * mapFactor - mapBorderWidth;
 
-const getMinimapMargin = (
-  originDimension: number,
-  initialDimension: number,
-  deltaDimension: number
-) => (-originDimension - initialDimension - deltaDimension) * mapFactor - mapBorderWidth;
-
-const minimapItemColor = (type: string) => {
+const minimapItemColor = type => {
   switch (type) {
     case 'good':
       return 'red';
@@ -34,7 +19,7 @@ const minimapItemColor = (type: string) => {
   }
 };
 
-export const Minimap = (props: PropsType) => (
+export const Minimap = props => (
   <MinimapContainerView background={props.background} pointerEvents={'box-none'}>
     {props.itemsList.map(
       item =>

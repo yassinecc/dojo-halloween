@@ -5,11 +5,7 @@ import { treasuresCount } from 'dojo-halloween/src/helpers/constants';
 
 const imageStyle = { width: 60, height: 40 };
 
-type PropsType = {
-  keysNumber: number,
-};
-
-export class KeysIndicator extends React.PureComponent<PropsType> {
+export class KeysIndicator extends React.PureComponent<*> {
   keysIndicator = () => {
     const array = [];
     for (var i = 0; i < treasuresCount; i++) {

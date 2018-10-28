@@ -1,7 +1,7 @@
 import { Audio } from 'expo';
 import { scream } from 'dojo-halloween/assets';
 
-const soundObject: SoundType = new Audio.Sound();
+const soundObject = new Audio.Sound();
 
 const init = async () => {
   try {

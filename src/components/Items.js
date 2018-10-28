@@ -54,7 +54,7 @@ const Danger = item => (
     />
   </View>
 );
-export class Items extends React.Component<PropsType, *> {
+export class Items extends React.Component<*> {
   render() {
     return this.props.itemsList.map(item => {
       if (item.type === 'bad') return Danger(item);
@@ -63,9 +63,3 @@ export class Items extends React.Component<PropsType, *> {
     });
   }
 }
-
-type PropsType = {
-  isFinalChestVisible: boolean,
-  foundTreasures: Array<string>,
-  itemsList: Array<Point<number>>,
-};
