@@ -67,11 +67,9 @@ export default class App extends React.Component<*, StateType> {
       x: 0,
       y: 0,
     },
-    origin: {
-      x: 0,
-      y: 0,
-    },
   };
+
+  origin: { x: number, y: number } = { x: 0, y: 0 };
 
   state: StateType = this.initialState;
 
@@ -189,17 +187,17 @@ export default class App extends React.Component<*, StateType> {
 
   onImageLayout = (event: ViewLayoutEvent) => {
     const { x, y } = event.nativeEvent.layout;
-    if (!this.state.origin.x || !this.state.origin.y) this.setState({ origin: { x, y } });
+    if (!this.origin.x || !this.origin.y) this.origin = { x, y };
   };
 
   getFinalDisplacement = (diff: number, dimension: string) => {
     return diff > 0
-      ? Math.min(diff, -this.state.origin[dimension] - this.state.initial[dimension])
+      ? Math.min(diff, -this.origin[dimension] - this.state.initial[dimension])
       : Math.max(
           diff,
           screen[dimension] -
             background[dimension] -
-            this.state.origin[dimension] -
+            this.origin[dimension] -
             this.state.initial[dimension]
         );
   };
@@ -238,8 +236,8 @@ export default class App extends React.Component<*, StateType> {
     };
     const itemContainerStyle = {
       position: 'absolute',
-      left: this.state.origin.x + initial.x + delta.x,
-      top: this.state.origin.y + initial.y + delta.y,
+      left: this.origin.x + initial.x + delta.x,
+      top: this.origin.y + initial.y + delta.y,
       height: background.y,
       width: background.x,
     };
@@ -267,7 +265,7 @@ export default class App extends React.Component<*, StateType> {
           screen={screen}
           itemsList={this.itemsList}
           isFinalChestVisible={this.state.isFinalChestVisible}
-          originDimension={this.state.origin}
+          originDimension={this.origin}
           initialDimension={this.state.initial}
           deltaDimension={this.state.delta}
         />
@@ -311,10 +309,6 @@ type StateType = {
     y: number,
   },
   delta: {
-    x: number,
-    y: number,
-  },
-  origin: {
     x: number,
     y: number,
   },
