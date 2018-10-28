@@ -1,5 +1,3 @@
-// @flow
-
 export const slenderMenCount = 3;
 export const treasuresCount = 2;
 

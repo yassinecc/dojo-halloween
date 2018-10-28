@@ -1,5 +1,3 @@
-// @flow
-
 import { Audio } from 'expo';
 import { scream } from 'dojo-halloween/assets';
 

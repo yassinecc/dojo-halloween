@@ -1,5 +1,3 @@
-// @flow
-
 import countBy from 'lodash/countBy';
 import {
   threshold,

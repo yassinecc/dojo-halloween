@@ -1,5 +1,3 @@
-// @flow
-
 export { KeysIndicator } from './KeysIndicator';
 export { Items } from './Items';
 export { Sound } from './Sound';

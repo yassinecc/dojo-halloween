@@ -1,5 +1,3 @@
-// @flow
-
 import React from 'react';
 import { View, Image } from 'react-native';
 import { closedChest, openChest, closedFinalChest, openFinalChest } from 'dojo-halloween/assets';
