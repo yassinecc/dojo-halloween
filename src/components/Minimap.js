@@ -10,16 +10,16 @@ type PropsType = {
   screen: { x: number, y: number },
   itemsList: Array<Point<number>>,
   isFinalChestVisible: boolean,
-  startDimension: { x: number, y: number },
+  originDimension: { x: number, y: number },
   initialDimension: { x: number, y: number },
   deltaDimension: { x: number, y: number },
 };
 
 const getMinimapMargin = (
-  startDimension: number,
+  originDimension: number,
   initialDimension: number,
   deltaDimension: number
-) => (-startDimension - initialDimension - deltaDimension) * mapFactor - mapBorderWidth;
+) => (-originDimension - initialDimension - deltaDimension) * mapFactor - mapBorderWidth;
 
 const minimapItemColor = (type: string) => {
   switch (type) {
@@ -56,12 +56,12 @@ export const Minimap = (props: PropsType) => (
       screen={props.screen}
       pointerEvents={'box-none'}
       left={getMinimapMargin(
-        props.startDimension['x'],
+        props.originDimension['x'],
         props.initialDimension['x'],
         props.deltaDimension['x']
       )}
       top={getMinimapMargin(
-        props.startDimension['y'],
+        props.originDimension['y'],
         props.initialDimension['y'],
         props.deltaDimension['y']
       )}

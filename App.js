@@ -67,7 +67,7 @@ export default class App extends React.Component<*, StateType> {
       x: 0,
       y: 0,
     },
-    start: {
+    origin: {
       x: 0,
       y: 0,
     },
@@ -189,17 +189,17 @@ export default class App extends React.Component<*, StateType> {
 
   onImageLayout = (event: ViewLayoutEvent) => {
     const { x, y } = event.nativeEvent.layout;
-    if (!this.state.start.x || !this.state.start.y) this.setState({ start: { x, y } });
+    if (!this.state.origin.x || !this.state.origin.y) this.setState({ origin: { x, y } });
   };
 
   getFinalDisplacement = (diff: number, dimension: string) => {
     return diff > 0
-      ? Math.min(diff, -this.state.start[dimension] - this.state.initial[dimension])
+      ? Math.min(diff, -this.state.origin[dimension] - this.state.initial[dimension])
       : Math.max(
           diff,
           screen[dimension] -
             background[dimension] -
-            this.state.start[dimension] -
+            this.state.origin[dimension] -
             this.state.initial[dimension]
         );
   };
@@ -238,8 +238,8 @@ export default class App extends React.Component<*, StateType> {
     };
     const itemContainerStyle = {
       position: 'absolute',
-      left: this.state.start.x + initial.x + delta.x,
-      top: this.state.start.y + initial.y + delta.y,
+      left: this.state.origin.x + initial.x + delta.x,
+      top: this.state.origin.y + initial.y + delta.y,
       height: background.y,
       width: background.x,
     };
@@ -267,7 +267,7 @@ export default class App extends React.Component<*, StateType> {
           screen={screen}
           itemsList={this.itemsList}
           isFinalChestVisible={this.state.isFinalChestVisible}
-          startDimension={this.state.start}
+          originDimension={this.state.origin}
           initialDimension={this.state.initial}
           deltaDimension={this.state.delta}
         />
@@ -314,7 +314,7 @@ type StateType = {
     x: number,
     y: number,
   },
-  start: {
+  origin: {
     x: number,
     y: number,
   },
