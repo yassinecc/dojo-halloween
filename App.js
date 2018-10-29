@@ -96,8 +96,20 @@ export default class App extends React.Component<*> {
     }
   };
 
-  handleSlenderManModal = (prevState, collidingElement, charItem) => {};
-
+  handleSlenderManModal = (prevState, collidingElement, charItem) => {
+    if (
+      !this.state.showSlenderManModal &&
+      this.state.isInDanger &&
+      collidingElement &&
+      getSquareDistance(collidingElement, charItem) < 10000
+    ) {
+      Sound.playScream(); // Joue le son
+      this.setState({ showSlenderManModal: true }); // Affiche le slenderman
+    }
+    if (!prevState.showSlenderManModal && this.state.showSlenderManModal) {
+      setTimeout(() => this.setState({ showSlenderManModal: false, isInDanger: false }), 1500);
+    }
+  };
   handleBoxOpening = (prevState, collidingTreasure) => {};
 
   componentDidUpdate(_, prevState) {
@@ -189,6 +201,16 @@ export default class App extends React.Component<*> {
           style={{ position: 'absolute' }}
           source={characterDirections[this.state.characterDirection]}
         />
+        <Modal
+          transparent
+          animationType={'fade'}
+          visible={this.state.showSlenderManModal}
+          onRequestClose={() => {}}
+        >
+          <View style={styles.fullScreenStyle}>
+            <Image source={slenderMan} resizeMode={'contain'} />
+          </View>
+        </Modal>
       </View>
     );
   }
