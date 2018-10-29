@@ -121,9 +121,26 @@ export default class App extends React.Component<*> {
         );
   };
 
-  handleGesture = (_, gestureState) => {};
+  handleGesture = (_, gestureState) => {
+    const finalDx = this.getFinalDisplacement(gestureState.dx, 'x');
+    const finalDy = this.getFinalDisplacement(gestureState.dy, 'y');
 
-  resetDragState = () => {};
+    this.setState({ delta: { x: finalDx, y: finalDy } });
+  };
+
+  resetDragState = () => {
+    const { initial, delta } = this.state;
+    this.setState({
+      initial: { x: initial.x + delta.x, y: initial.y + delta.y },
+      delta: { x: 0, y: 0 },
+    });
+  };
+
+  panResponder = PanResponder.create({
+    onStartShouldSetPanResponder: () => true,
+    onPanResponderMove: this.handleGesture,
+    onPanResponderRelease: this.resetDragState,
+  });
 
   render() {
     const { initial, delta } = this.state;
@@ -140,7 +157,12 @@ export default class App extends React.Component<*> {
     };
     return (
       <View style={styles.container}>
-        <Image onLayout={this.onImageLayout} source={backgroundImage} style={imageStyle} />
+        <Image
+          onLayout={this.onImageLayout}
+          source={backgroundImage}
+          style={imageStyle}
+          {...this.panResponder.panHandlers}
+        />
         <Image style={{ position: 'absolute' }} source={characterDown} />
       </View>
     );
