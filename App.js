@@ -141,6 +141,7 @@ export default class App extends React.Component<*> {
     return (
       <View style={styles.container}>
         <Image onLayout={this.onImageLayout} source={backgroundImage} style={imageStyle} />
+        <Image style={{ position: 'absolute' }} source={characterDown} />
       </View>
     );
   }
