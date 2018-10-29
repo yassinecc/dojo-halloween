@@ -40,4 +40,4 @@ export const mapFactor = 1 / 25;
 
 export const mapBorderWidth = 2;
 
-export const debugMode = true;
+export const debugMode = false;

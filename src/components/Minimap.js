@@ -11,7 +11,7 @@ const minimapItemColor = type => {
     case 'good':
       return 'red';
     case 'treasure':
-      return debugMode ? 'gold' : 'transparent';
+      return 'gold';
     case 'bad':
       return debugMode ? 'blue' : 'transparent';
     default:
