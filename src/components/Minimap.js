@@ -37,20 +37,7 @@ export const Minimap = props => (
           />
         )
     )}
-    <MinimapView
-      screen={props.screen}
-      pointerEvents={'box-none'}
-      left={getMinimapMargin(
-        props.originDimension['x'],
-        props.initialDimension['x'],
-        props.deltaDimension['x']
-      )}
-      top={getMinimapMargin(
-        props.originDimension['y'],
-        props.initialDimension['y'],
-        props.deltaDimension['y']
-      )}
-    />
+    <MinimapView screen={props.screen} pointerEvents={'box-none'} left={0} top={0} />
   </MinimapContainerView>
 );
 

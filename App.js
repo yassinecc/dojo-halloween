@@ -37,13 +37,6 @@ const screenDimensions = Dimensions.get('screen');
 
 const screen = { x: screenDimensions.width, y: screenDimensions.height };
 
-const characterDirections = {
-  up: characterUp,
-  down: characterDown,
-  left: characterLeft,
-  right: characterRight,
-};
-
 export default class App extends React.Component<*> {
   initialState = {
     gyroscopeData: { x: 0, y: 0, z: 0 },
@@ -67,9 +60,9 @@ export default class App extends React.Component<*> {
 
   origin = { x: 0, y: 0 };
 
-  state = this.initialState;
+  itemsList = [];
 
-  itemsList = generateRandomCoordinates(background.x, background.y);
+  state = this.initialState;
 
   resetGame = () => {
     this.itemsList = generateRandomCoordinates(background.x, background.y);
@@ -78,80 +71,19 @@ export default class App extends React.Component<*> {
 
   componentDidMount() {
     Sound.init();
-    this.subscription = Gyroscope.addListener(result => {
-      this.setState({ gyroscopeData: result });
-    });
   }
 
   componentWillUnmount() {
     this.subscription && this.subscription.remove();
   }
 
-  handleKeysIndicator = (prevState, collidingTreasure) => {
-    if (
-      !prevState.showTreasureIndication &&
-      collidingTreasure &&
-      (collidingTreasure.type === 'good' || this.state.isFinalChestVisible) &&
-      !this.state.openedItemsKeys.includes(collidingTreasure.key)
-    ) {
-      this.setState({ showTreasureIndication: true });
-    }
-    if (prevState.keysNumber !== this.state.keysNumber) {
-      this.setState({ showTreasureIndication: false });
-    }
-  };
+  handleKeysIndicator = (prevState, collidingTreasure) => {};
 
-  handleCollision = (prevState, collidingElement) => {
-    if (!prevState.collidingElement && collidingElement) {
-      Vibration.vibrate(500);
-      this.setState({ collidingElement, isInDanger: true });
-    }
-    if (prevState.collidingElement && !collidingElement) {
-      this.setState({ collidingElement: null });
-    }
-  };
+  handleCollision = (prevState, collidingElement) => {};
 
-  handleSlenderManModal = (prevState, collidingElement, charItem) => {
-    if (
-      !this.state.showSlenderManModal &&
-      this.state.isInDanger &&
-      collidingElement &&
-      getSquareDistance(collidingElement, charItem) < 10000
-    ) {
-      Sound.playScream();
-      this.setState({ showSlenderManModal: true });
-    }
-    // Auto hide slenderManModal
-    if (!prevState.showSlenderManModal && this.state.showSlenderManModal) {
-      setTimeout(() => this.setState({ showSlenderManModal: false, isInDanger: false }), 1500);
-    }
-  };
+  handleSlenderManModal = (prevState, collidingElement, charItem) => {};
 
-  handleBoxOpening = (prevState, collidingTreasure) => {
-    if (
-      collidingTreasure &&
-      collidingTreasure.key &&
-      !this.state.openedItemsKeys.includes(collidingTreasure.key) &&
-      prevState.gyroscopeData.y <= 7 &&
-      this.state.gyroscopeData.y > 7
-    ) {
-      const openedItems: Array<string> = uniq([
-        ...this.state.openedItemsKeys,
-        collidingTreasure.key,
-      ]);
-      this.setState({
-        keysNumber: this.state.keysNumber + 1,
-        openedItemsKeys: openedItems,
-        isFinalChestVisible: openedItems.length >= treasuresCount,
-      });
-      collidingTreasure.type === 'treasure'
-        ? Alert.alert('Félicitations', 'Tu as trouvé le dernier trésor!', [
-            { text: 'Super!', onPress: () => {} },
-            { text: 'Rejouer?', onPress: this.resetGame },
-          ])
-        : Alert.alert('Bravo', 'Coffre ouvert');
-    }
-  };
+  handleBoxOpening = (prevState, collidingTreasure) => {};
 
   componentDidUpdate(_, prevState) {
     const charItem = {
@@ -189,31 +121,9 @@ export default class App extends React.Component<*> {
         );
   };
 
-  handleGesture = (_, gestureState) => {
-    const finalDx = this.getFinalDisplacement(gestureState.dx, 'x');
-    const finalDy = this.getFinalDisplacement(gestureState.dy, 'y');
-    let characterDirection = this.state.characterDirection;
-    if (Math.abs(finalDx) > Math.abs(finalDy)) {
-      characterDirection = finalDx < 0 ? 'right' : 'left';
-    } else {
-      characterDirection = finalDy < 0 ? 'down' : 'up';
-    }
-    this.setState({ delta: { x: finalDx, y: finalDy }, characterDirection });
-  };
+  handleGesture = (_, gestureState) => {};
 
-  resetDragState = () => {
-    const { initial, delta } = this.state;
-    this.setState({
-      initial: { x: initial.x + delta.x, y: initial.y + delta.y },
-      delta: { x: 0, y: 0 },
-    });
-  };
-
-  panResponder = PanResponder.create({
-    onStartShouldSetPanResponder: () => true,
-    onPanResponderMove: this.handleGesture,
-    onPanResponderRelease: this.resetDragState,
-  });
+  resetDragState = () => {};
 
   render() {
     const { initial, delta } = this.state;
@@ -230,47 +140,7 @@ export default class App extends React.Component<*> {
     };
     return (
       <View style={styles.container}>
-        <Image
-          onLayout={this.onImageLayout}
-          source={backgroundImage}
-          style={imageStyle}
-          {...this.panResponder.panHandlers}
-        />
-        <Items
-          style={itemContainerStyle}
-          isFinalChestVisible={this.state.isFinalChestVisible}
-          foundTreasures={this.state.openedItemsKeys}
-          itemsList={this.itemsList}
-        />
-        <Image
-          style={{ position: 'absolute' }}
-          source={characterDirections[this.state.characterDirection]}
-        />
-        <Minimap
-          background={background}
-          screen={screen}
-          itemsList={this.itemsList}
-          isFinalChestVisible={this.state.isFinalChestVisible}
-          originDimension={this.origin}
-          initialDimension={this.state.initial}
-          deltaDimension={this.state.delta}
-        />
-        <KeysIndicator keysNumber={this.state.keysNumber} />
-        {this.state.showTreasureIndication && (
-          <View pointerEvents="box-none" style={styles.treasureTextView}>
-            <Text style={styles.treasureText}>Ouvre le coffre!</Text>
-          </View>
-        )}
-        <Modal
-          transparent
-          animationType={'fade'}
-          visible={this.state.showSlenderManModal}
-          onRequestClose={() => {}}
-        >
-          <View style={styles.fullScreenStyle}>
-            <Image source={slenderMan} resizeMode={'contain'} />
-          </View>
-        </Modal>
+        <Image onLayout={this.onImageLayout} source={backgroundImage} style={imageStyle} />
       </View>
     );
   }
