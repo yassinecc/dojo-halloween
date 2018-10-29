@@ -29,6 +29,13 @@ import {
   getSquareDistance,
 } from 'dojo-halloween/src/helpers/itemsHelper';
 
+const characterDirections = {
+  up: characterUp,
+  down: characterDown,
+  left: characterLeft,
+  right: characterRight,
+};
+
 const backgroundDimensions = Image.resolveAssetSource(backgroundImage);
 
 const background = { x: backgroundDimensions.width, y: backgroundDimensions.height };
@@ -124,8 +131,14 @@ export default class App extends React.Component<*> {
   handleGesture = (_, gestureState) => {
     const finalDx = this.getFinalDisplacement(gestureState.dx, 'x');
     const finalDy = this.getFinalDisplacement(gestureState.dy, 'y');
+    let characterDirection = this.state.characterDirection;
+    if (Math.abs(finalDx) > Math.abs(finalDy)) {
+      characterDirection = finalDx < 0 ? 'right' : 'left';
+    } else {
+      characterDirection = finalDy < 0 ? 'down' : 'up';
+    }
 
-    this.setState({ delta: { x: finalDx, y: finalDy } });
+    this.setState({ delta: { x: finalDx, y: finalDy }, characterDirection });
   };
 
   resetDragState = () => {
@@ -163,7 +176,10 @@ export default class App extends React.Component<*> {
           style={imageStyle}
           {...this.panResponder.panHandlers}
         />
-        <Image style={{ position: 'absolute' }} source={characterDown} />
+        <Image
+          style={{ position: 'absolute' }}
+          source={characterDirections[this.state.characterDirection]}
+        />
       </View>
     );
   }
