@@ -201,6 +201,7 @@ export default class App extends React.Component<*> {
           style={{ position: 'absolute' }}
           source={characterDirections[this.state.characterDirection]}
         />
+        <KeysIndicator keysNumber={this.state.keysNumber} />
         <Minimap
           background={background}
           screen={screen}
