@@ -84,7 +84,14 @@ export default class App extends React.Component<*> {
     this.subscription && this.subscription.remove();
   }
 
-  handleKeysIndicator = (prevState, collidingTreasure) => {};
+  handleKeysIndicator = (prevState, collidingTreasure) => {
+    if (!prevState.showTreasureIndication && collidingTreasure) {
+      this.setState({ showTreasureIndication: true });
+    }
+    if (prevState.showTreasureIndication && !collidingTreasure) {
+      this.setState({ showTreasureIndication: false });
+    }
+  };
 
   handleCollision = (prevState, collidingElement) => {
     if (!prevState.collidingElement && collidingElement) {
@@ -202,6 +209,11 @@ export default class App extends React.Component<*> {
           source={characterDirections[this.state.characterDirection]}
         />
         <KeysIndicator keysNumber={this.state.keysNumber} />
+        {this.state.showTreasureIndication && (
+          <View pointerEvents="box-none" style={styles.treasureTextView}>
+            <Text style={styles.treasureText}>Ouvre le coffre!</Text>
+          </View>
+        )}
         <Minimap
           background={background}
           screen={screen}
