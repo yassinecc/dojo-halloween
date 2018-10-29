@@ -102,12 +102,10 @@ export default class App extends React.Component<*> {
   };
 
   handleCollision = (prevState, collidingElement) => {
-    // Set inDanger flag when entering danger zone
     if (!prevState.collidingElement && collidingElement) {
       Vibration.vibrate(500);
       this.setState({ collidingElement, isInDanger: true });
     }
-    // Reset when exiting danger zone
     if (prevState.collidingElement && !collidingElement) {
       this.setState({ collidingElement: null });
     }

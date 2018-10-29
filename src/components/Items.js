@@ -55,6 +55,11 @@ const Danger = item => (
   </View>
 );
 export class Items extends React.Component<*> {
+  static defaultProps = {
+    foundTreasures: [],
+    isFinalChestVisible: false,
+  };
+
   render() {
     return this.props.itemsList.map(item => {
       if (item.type === 'bad') return Danger(item);

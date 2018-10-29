@@ -17,7 +17,6 @@ export class KeysIndicator extends React.PureComponent<*> {
   };
 
   render() {
-    console.log(this.props);
     return (
       <View style={{ flexDirection: 'row', position: 'absolute', top: 20, right: 0 }}>
         {this.keysIndicator()}
