@@ -86,7 +86,15 @@ export default class App extends React.Component<*> {
 
   handleKeysIndicator = (prevState, collidingTreasure) => {};
 
-  handleCollision = (prevState, collidingElement) => {};
+  handleCollision = (prevState, collidingElement) => {
+    if (!prevState.collidingElement && collidingElement) {
+      Vibration.vibrate(500);
+      this.setState({ collidingElement, isInDanger: true });
+    }
+    if (prevState.collidingElement && !collidingElement) {
+      this.setState({ collidingElement: null });
+    }
+  };
 
   handleSlenderManModal = (prevState, collidingElement, charItem) => {};
 
