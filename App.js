@@ -67,7 +67,7 @@ export default class App extends React.Component<*> {
 
   origin = { x: 0, y: 0 };
 
-  itemsList = [];
+  itemsList = generateRandomCoordinates(background.x, background.y);
 
   state = this.initialState;
 
@@ -176,6 +176,7 @@ export default class App extends React.Component<*> {
           style={imageStyle}
           {...this.panResponder.panHandlers}
         />
+        <Items style={itemContainerStyle} itemsList={this.itemsList} />
         <Image
           style={{ position: 'absolute' }}
           source={characterDirections[this.state.characterDirection]}
