@@ -236,13 +236,12 @@ export default class App extends React.Component<*> {
           style={imageStyle}
           {...this.panResponder.panHandlers}
         />
-        <View style={itemContainerStyle} pointerEvents={'box-none'}>
-          <Items
-            isFinalChestVisible={this.state.isFinalChestVisible}
-            foundTreasures={this.state.openedItemsKeys}
-            itemsList={this.itemsList}
-          />
-        </View>
+        <Items
+          style={itemContainerStyle}
+          isFinalChestVisible={this.state.isFinalChestVisible}
+          foundTreasures={this.state.openedItemsKeys}
+          itemsList={this.itemsList}
+        />
         <Image
           style={{ position: 'absolute' }}
           source={characterDirections[this.state.characterDirection]}

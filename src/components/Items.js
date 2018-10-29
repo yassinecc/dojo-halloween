@@ -58,13 +58,18 @@ export class Items extends React.Component<*> {
   static defaultProps = {
     foundTreasures: [],
     isFinalChestVisible: false,
+    style: {},
   };
 
   render() {
-    return this.props.itemsList.map(item => {
-      if (item.type === 'bad') return Danger(item);
-      const isFound = this.props.foundTreasures.includes(item.key);
-      return Box(item, isFound, this.props.isFinalChestVisible);
-    });
+    return (
+      <View style={this.props.style} pointerEvents="box-none">
+        {this.props.itemsList.map(item => {
+          if (item.type === 'bad') return Danger(item);
+          const isFound = this.props.foundTreasures.includes(item.key);
+          return Box(item, isFound, this.props.isFinalChestVisible);
+        })}
+      </View>
+    );
   }
 }
