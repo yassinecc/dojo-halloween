@@ -1,5 +1,5 @@
 export const slenderMenCount = 3;
-export const treasuresCount = 2;
+export const treasuresCount = 5;
 
 export const itemsCount = slenderMenCount + treasuresCount + 1;
 
