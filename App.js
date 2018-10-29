@@ -201,6 +201,14 @@ export default class App extends React.Component<*> {
           style={{ position: 'absolute' }}
           source={characterDirections[this.state.characterDirection]}
         />
+        <Minimap
+          background={background}
+          screen={screen}
+          itemsList={this.itemsList}
+          originDimension={this.origin}
+          initialDimension={this.state.initial}
+          deltaDimension={this.state.delta}
+        />
         <Modal
           transparent
           animationType={'fade'}
