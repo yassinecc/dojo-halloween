@@ -138,6 +138,7 @@ export default class App extends React.Component<*> {
       ]);
       this.setState({
         openedItemsKeys: openedItems,
+        keysNumber: this.state.keysNumber + 1,
       });
       Alert.alert('Bravo', 'Coffre ouvert');
     }
@@ -227,7 +228,11 @@ export default class App extends React.Component<*> {
           style={imageStyle}
           {...this.panResponder.panHandlers}
         />
-        <Items style={itemContainerStyle} itemsList={this.itemsList} />
+        <Items
+          style={itemContainerStyle}
+          itemsList={this.itemsList}
+          foundTreasures={this.state.openedItemsKeys}
+        />
         <Image
           style={{ position: 'absolute' }}
           source={characterDirections[this.state.characterDirection]}
