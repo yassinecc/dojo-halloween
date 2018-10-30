@@ -142,7 +142,14 @@ export default class App extends React.Component<*> {
         keysNumber: this.state.keysNumber + 1,
         isFinalChestVisible: openedItems.length >= treasuresCount,
       });
-      Alert.alert('Bravo', 'Coffre ouvert');
+      if (collidingTreasure.type !== 'treasure') {
+        Alert.alert('Bravo', 'Coffre ouvert');
+      } else {
+        Alert.alert('Félicitations!', 'Veux tu rejouer?', [
+          { text: 'Rejouer?', onPress: this.resetGame },
+          { text: 'Fermer', onPress: () => {} },
+        ]);
+      }
     }
   };
 
