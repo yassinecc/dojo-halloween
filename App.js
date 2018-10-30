@@ -91,7 +91,8 @@ export default class App extends React.Component<*> {
     if (
       !prevState.showTreasureIndication &&
       collidingTreasure &&
-      !this.state.openedItemsKeys.includes(collidingTreasure.key)
+      !this.state.openedItemsKeys.includes(collidingTreasure.key) &&
+      (collidingTreasure.type === 'good' || this.state.isFinalChestVisible)
     ) {
       this.setState({ showTreasureIndication: true });
     }
@@ -139,6 +140,7 @@ export default class App extends React.Component<*> {
       this.setState({
         openedItemsKeys: openedItems,
         keysNumber: this.state.keysNumber + 1,
+        isFinalChestVisible: openedItems.length >= treasuresCount,
       });
       Alert.alert('Bravo', 'Coffre ouvert');
     }
@@ -232,6 +234,7 @@ export default class App extends React.Component<*> {
           style={itemContainerStyle}
           itemsList={this.itemsList}
           foundTreasures={this.state.openedItemsKeys}
+          isFinalChestVisible={this.state.isFinalChestVisible}
         />
         <Image
           style={{ position: 'absolute' }}
@@ -250,6 +253,7 @@ export default class App extends React.Component<*> {
           originDimension={this.origin}
           initialDimension={this.state.initial}
           deltaDimension={this.state.delta}
+          isFinalChestVisible={this.state.isFinalChestVisible}
         />
         <Modal
           transparent
