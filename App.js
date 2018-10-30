@@ -78,6 +78,9 @@ export default class App extends React.Component<*> {
 
   componentDidMount() {
     Sound.init();
+    this.subscription = Gyroscope.addListener(result => {
+      this.setState({ gyroscopeData: result });
+    });
   }
 
   componentWillUnmount() {
@@ -85,7 +88,11 @@ export default class App extends React.Component<*> {
   }
 
   handleKeysIndicator = (prevState, collidingTreasure) => {
-    if (!prevState.showTreasureIndication && collidingTreasure) {
+    if (
+      !prevState.showTreasureIndication &&
+      collidingTreasure &&
+      !this.state.openedItemsKeys.includes(collidingTreasure.key)
+    ) {
       this.setState({ showTreasureIndication: true });
     }
     if (prevState.showTreasureIndication && !collidingTreasure) {
@@ -117,7 +124,24 @@ export default class App extends React.Component<*> {
       setTimeout(() => this.setState({ showSlenderManModal: false, isInDanger: false }), 1500);
     }
   };
-  handleBoxOpening = (prevState, collidingTreasure) => {};
+  handleBoxOpening = (prevState, collidingTreasure) => {
+    if (
+      collidingTreasure &&
+      collidingTreasure.key &&
+      !this.state.openedItemsKeys.includes(collidingTreasure.key) &&
+      prevState.gyroscopeData.y <= 7 &&
+      this.state.gyroscopeData.y > 7
+    ) {
+      const openedItems: Array<string> = uniq([
+        ...this.state.openedItemsKeys,
+        collidingTreasure.key,
+      ]);
+      this.setState({
+        openedItemsKeys: openedItems,
+      });
+      Alert.alert('Bravo', 'Coffre ouvert');
+    }
+  };
 
   componentDidUpdate(_, prevState) {
     const charItem = {
