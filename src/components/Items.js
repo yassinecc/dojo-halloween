@@ -66,6 +66,7 @@ export class Items extends React.Component<*> {
       <View style={this.props.style} pointerEvents="box-none">
         {this.props.itemsList.map(item => {
           if (item.type === 'bad') return Danger(item);
+          console.log('coucou')
           const isFound = this.props.foundTreasures.includes(item.key);
           return Box(item, isFound, this.props.isFinalChestVisible);
         })}
