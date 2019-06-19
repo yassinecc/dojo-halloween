@@ -4,7 +4,7 @@
     "description": "Dojo Halloween BAM",
     "slug": "dojo-halloween",
     "privacy": "public",
-    "sdkVersion": "30.0.0",
+    "sdkVersion": "33.0.0",
     "platforms": [
       "ios",
       "android"
